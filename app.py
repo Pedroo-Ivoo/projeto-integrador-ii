@@ -1,0 +1,257 @@
+from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+from dotenv import load_dotenv
+import bcrypt
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user 
+import re
+
+import smtplib #biblioteca necesária para o envio de e-mail
+from email.mime.text import MIMEText #Biblioteca para usar no e-mail
+from email.mime.multipart import MIMEMultipart #Biblioteca para usar no e-mail
+
+from models import Usuarios
+from config import db # Importa o inicializador do banco de dados
+load_dotenv()
+
+app = Flask(__name__)
+# Instancia o gerenciador de autenticação do Flask-Login.
+# Essa linha cria o objeto LoginManager, responsável por controlar o fluxo de login,
+# logout, verificação de sessão e redirecionamento de usuários não autenticados.
+logMan = LoginManager(app)
+#O view redireciona para a rota que realiza o login evitando que usuario sem acesso receba a mensagem de não autorizado em uma página 401
+logMan.login_view = "/"
+#Mensagem que aparecerá na pagina de login
+logMan.login_message = "Você precisa estar logado para acessar esta página."
+logMan.login_message_category = "warning"
+
+app.secret_key = os.getenv("CHAVESEGURA")
+
+POSTGRES_URI = os.getenv("DATABASE_URL")
+# Verificações básicas para garantir que as variáveis do DB foram carregadas
+if not POSTGRES_URI:
+    raise ValueError("DATABASE_URL não definida! Verifique o arquivo .env ou variáveis de ambiente")
+    
+app.config["SQLALCHEMY_DATABASE_URI"] = POSTGRES_URI
+db.init_app(app)
+
+
+
+
+#-----------------------------------------Funções--------------------------------------------------------#
+#Metodo necessário para acessar o site sem o login realizado.
+@logMan.user_loader
+def load_user(user_id):
+    return None  # Nenhum usuário será carregado por enquanto
+
+#--------------------------------------------------------------------------------------------------------#
+
+#Função que verifica se o e-mail foi escrito dentro do padrão correto#
+def verifica_email(email):
+    #Expressão regular para verificação da escrita correta de e-mail.
+    # "exemplo" + @ + "email" . "com" e ou ."br"
+    padrao = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+
+    if re.fullmatch(padrao, email):
+        return True
+    else:
+        return False
+    
+#--------------------------------------------------------------------------------------------------------#  
+
+#Função que formata os nomes para deixar padronizdo com as iniciais maiúsculas#
+def formatar_nome(nome):
+    particulas = {"da", "das", "de", "do", "dos", "e"}
+    # Aplica title() pra capitalizar
+    nome_formatado = nome.title()
+    
+    # Quebrar o nome em palavras para avaliar as partículas
+    palavras = nome_formatado.split()
+    
+    # Ajustar partículas para minúsculo
+    resultado = []
+    for palavra in palavras:
+        if palavra.lower() in particulas:
+            resultado.append(palavra.lower())
+        else:
+            resultado.append(palavra)
+    
+    return " ".join(resultado)
+
+#--------------------------------------------------------------------------------------------------------#
+#Função que envia e-mail para a recuperação de senha
+def enviar_email(email):
+    #Configurações
+    port = os.getenv("port")
+    smtp_server = os.getenv("smtp_server")
+    login = os.getenv("login")  # Seu login gerado pelo Mailtrap
+    password = os.getenv('password')  # Sua senha gerada pelo Mailtrap
+
+    sender_email = os.getenv("sender_email")
+    receiver_email = email
+    # Conteúdo de email
+    subject = "Email HTML Email sem Anexo"
+    html = """\
+    <html>
+    <body>
+        <p>Oi,<br>
+        Este é um email de <b>teste</b> sem um anexo usando <a href="https://www.python.org">Python</a>.</p>
+    </body>
+    </html>
+    """
+
+    # Criar uma mensagem multipart e definir cabeçalhos
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+
+    # Anexar a parte em HTML
+    message.attach(MIMEText(html, "html"))
+
+    # Enviar o email
+    with smtplib.SMTP(smtp_server, port) as server:
+        server.starttls()
+        server.login(login, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+
+    print('Enviado')
+
+#-------------------------------------Endpoints---------------------------------------------#
+#Rota da página inicial
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+#Rota para realizar o logout do sistema.
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
+#Rota para realização do login
+@app.route("/login", methods=["GET", "POST"])
+#Regra de negócio para acessar as páginas restritas
+def login():
+    if request.method== "POST":
+        usuario = request.form.get("usuario", "").lower().strip()
+        senha = request.form.get("senha","").lower().strip()
+        print(f"Usuario {usuario} e senha {senha}")
+        usuario_cadastrado = Usuarios.query.filter_by(usuario=usuario).first()
+        if usuario_cadastrado:
+            #Verificador se a senha com hash corresponde com a senha do salva
+            if bcrypt.checkpw(senha.encode('utf-8'), usuario_cadastrado.senha):
+                login_user(usuario_cadastrado)
+                return redirect(url_for("home"))
+            else:
+                flash(f"Usuário ou senha inválidos", "danger")
+                return redirect(url_for("login"))
+        else:
+            flash(f"Usuário ou senha inválidos", "danger")
+            return redirect(url_for("login"))
+    
+
+    return render_template("login.html")
+#Rota para cadastrar novos usuários
+@app.route("/cadastro_usuarios", methods=["GET", "POST"])
+
+def cadastro_usuario():
+    if request.method == "POST":
+        nome_recebido= request.form.get("nome","").strip() #as "" faz com que se o input vir sem dados o fluxo não quebre aos tentar aplicar o strip() é preciso validar o dado antes de enviar ao banco de dados
+        nome= formatar_nome(nome_recebido)
+        email = request.form.get("email", "").lower().strip()
+        usuario = request.form.get("usuario", "").lower().strip()
+        senha= request.form.get("senha", "").strip()
+        perfilAcesso = request.form.get("opcao", "")
+
+        
+        ##---------------------------------------Validações---------------------------------------##
+        #Nos campos obrigatórios se precisamos informar ao usuário qual campo foi preenchido de forma incorreta.
+        #Assim as validações deve ser individualizadas e ao final, caso existam erros, retornar os erros ao usuário.
+        #Inicia com um verificador de erros inicialmente configurado no False, na ocorrencia de erro irá modificar para TRUE
+        existe_erro= False
+        
+        #Verifica se o nome está preenchido
+        if not nome:
+            flash("O campo 'Nome' é obrigatório.", "warning")
+            existe_erro = True
+        
+        #Verifica se email está preenchido e se o formato está correto
+        if not email:
+            flash("O campo 'E-mail' é obrigatório.", "warning")
+            existe_erro =True    
+        #Verifica se no input o formato do e-mail está correto. Não estando retorna um aviso ao usuário
+        elif not verifica_email(email):
+            flash(f"{email} - Não corresponde ao padrão de e-mail:'exemplo@email.com'", "danger")
+            existe_erro =True    
+        
+        #Verifica se o Usuário está preenchido
+        if not usuario:
+            flash("O campo 'Usuário' é obrigatório.", "warning")
+            existe_erro =True    
+        
+        #Verifica se a senha está preenchida
+        if not senha:
+            flash("O campo 'Senha' é obrigatório.", "warning")
+            existe_erro =True 
+            
+        if not perfilAcesso:
+            flash("Por favor, selecione um perfil de acesso.", "danger")
+            existe_erro =True   
+        
+        #Verifica se todos os campos foram preenchidos. Se não forem não realiza o cadastro e retorna uma informação ao usuário.
+        #Na existencia de erro irá redirecionar para a página cadastro com as informações.            
+        if existe_erro:
+            return redirect(url_for("cadastro_usuarios"))
+
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------Segundo nivel de verificação--------------------------------------#
+        #Busca do Banco de dados se há usuario com o mesmo nome
+        cadastro_existente = Usuarios.query.filter_by(usuario=usuario).first() #realiza a consulta no banco.
+        
+        #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
+        if cadastro_existente:
+            flash(f"Nome de usuário já existe! Por favor, utilize outro nome de usuário.", "warning")
+            return redirect(url_for("cadastro_usuarios"))
+        else:
+        #Conversão da senha em hash pelo bcrypt
+            hashed = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
+            novo_usuario = Usuarios(nome=nome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso)
+            db.session.add(novo_usuario)
+            db.session.commit()
+            
+            #Ao cadastras usando o login_user já deixa o usuário automaticamente logado no sistema
+            login_user(novo_usuario)
+            return redirect(url_for("home"))  # Evita resubmissão do formulário
+        
+    return render_template("cadastro_usuarios.html")
+
+
+#Rota para a página central da aplicação
+@app.route("/home")
+def home():
+    return render_template("home.html")
+    
+@app.route("/recuperar_senha", methods=["POST", "GET"])
+def recuperar():
+    if request.method == "POST":
+        email = request.form.get("email", "").lower().strip()
+        print(email)
+         #Busca do Banco de dados se há usuario com o mesmo nome
+        cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
+        if not cadastro_existente:
+            flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
+            print('email invalido')
+            return redirect(url_for("recuperar"))
+        else:
+            enviar_email(email)
+            flash(f"E-mail enviado com sucesso.", "warning")
+            print("email valido")
+            return redirect(url_for("recuperar"))
+    
+    
+    return render_template("recuperar_senha.html")
+
+if __name__ == "__main__":
+    app.run(debug=True) 
+    

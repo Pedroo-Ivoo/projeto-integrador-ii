@@ -1,0 +1,45 @@
+/* Garante que o body ocupe toda a altura da tela e organize as seções verticalmente */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #e4fdc6;
+}
+
+main {
+  flex: 1;
+  /* min-height: 60vh; */
+}
+
+.box-form {
+  width: 22rem;
+  padding: 1rem;
+  background-color: rgba(201, 249, 209, 0.842);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+div i {
+  color: gray;
+}
+
+footer, header {
+  width: 100%;
+  padding: 1rem 0;
+  margin: 0;
+
+}
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+
+  header h1 {
+    margin-top: 0.5rem;
+  }
+
+  footer {
+    margin-top: 1rem;
+  }
+}

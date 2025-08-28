@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <!-- Link importando o bootstrap para o html -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/static/style.css" />
+
+</head>
+
+<body class="d-flex justify-content-center align-items-center ">
+    <main class="mt-md-5 mt-3">
+        <h1 class="d-flex justify-content-center mb-4">Cadastro</h1>
+        <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
+        <div id="msg-error" class="container-md"></div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                    {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }} container-md" style="width: 80%;" role="alert">
+                         {{ message }}
+                </div>
+                     {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="container-md box-form" style="width: 80%;">
+            <form id="form" method="POST" action="/cadastro" >
+                <div class="row g-3">
+                    <div class="col-sm-8">
+                        <label for="Nome">Nome (*)</label>
+                        <input class="form-control" type="text" name="nome" id="nome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido o uso do espaço como usuário">
+                    </div>
+                    <div class="col-md">
+                        <label for="email">E-mail (*)</label>
+                        <input class="form-control" type="email" name="email" id="email" title="exemplo@email.com" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="cep">CEP (*)</label>
+                        <input class="form-control" type="text" name="cep" id="cep" required
+                            title="00000-000">
+                        <div id="avisocep" class="form-text">
+                            Informe os 8 digitos do CEP.
+                        </div>
+                    </div>
+                    <div class="col-md"><label for="rua">Rua (*)</label>
+                        <input class="form-control" name="rua" type="text" id="rua" size="60" /></label>
+                    </div>
+                    <div class="col-md-1"><label for="numero">Nº (*)</label>
+                        <input class="form-control" name="numero" type="text" id="numero" size="60" required /></label>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4"><label for="complemento">Complemento</label>
+                        <input class="form-control" name="complemento" type="text" id="complemento" size="60" /></label>
+                    </div>
+                    <div class="col-md-4"><label for="bairro">Bairro (*):</label>
+                            <input class="form-control" name="bairro" type="text" id="bairro" size="40" />
+                    </div>
+
+                    <div class="col-md-3"><label for="cidade">Cidade (*)</label>
+                            <input class="form-control" name="cidade" type="text" id="cidade" size="40" />
+                    </div>
+                    <div class="col-md-1"><label for="estado">UF (*)</label>
+                            <input class="form-control" name="estado" type="text" id="estado" size="2" />
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="usuario">Usuário (*)</label>
+                            <input class="form-control" type="text" name="usuario" id="usuario" pattern="[A-Za-z0-9]+" minlength="3" maxlength="12" required>
+                            <div id="avisousuario" class="form-text">
+                                O nome do usuário deve conter entre 3 a 12 caracteres.
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <label for="senha"> Senha (*)</label>
+                            <div class="input-group">
+                                <input class="form-control" type="password" name="senha" id="senha" pattern="^[\S]{6,12}$" minlength="6" maxlength="12" required>
+                                <span class="input-group-text" onclick="mostrarSenha()" style="cursor: pointer;">
+                                    <i class="bi bi-eye" id="btn-senha"></i>
+                                </span>
+                            </div>
+                            <div id="avisosenha" class="form-text">
+                                Sua senha deve conter de 6-12 caracteres, podendo o conter letras, números ou caracteres especiais.
+                            </div>
+                        </div>
+                        <div id="obrigatorio" class="form-text">
+                                * Campos obrigatórios.
+                            </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
+                            <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
+                            <button onclick="history.back()" class="btn btn-outline-secondary mb-3">Voltar</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </main>
+    <!-- Jquery para o api do CEP, alteração do icone de mostrar e ocultar a senha e a máscara do cep. -->
+     <!-- Importante lembrar que para o funcionamento correto a ordem importa. -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="/static/jquerys.js"></script>
+    <script src="/static/script_cep.js"></script>
+</body>
+
+</html>
