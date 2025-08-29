@@ -2,4 +2,5 @@ transporte_seguro/
 __pycache__/
 .env
 bibliotecas_utilizadas.txt
-
+teste.html
+teste.py

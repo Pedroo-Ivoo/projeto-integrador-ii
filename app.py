@@ -5,6 +5,9 @@ import bcrypt
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user 
 import re
 
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer as Serializer
+
+
 import smtplib #biblioteca necesária para o envio de e-mail
 from email.mime.text import MIMEText #Biblioteca para usar no e-mail
 from email.mime.multipart import MIMEMultipart #Biblioteca para usar no e-mail
@@ -23,8 +26,8 @@ logMan.login_view = "/"
 #Mensagem que aparecerá na pagina de login
 logMan.login_message = "Você precisa estar logado para acessar esta página."
 logMan.login_message_category = "warning"
-
-app.secret_key = os.getenv("CHAVESEGURA")
+CHAVE_SECRETA = os.getenv("CHAVESEGURA")
+app.secret_key = CHAVE_SECRETA
 
 POSTGRES_URI = os.getenv("DATABASE_URL")
 # Verificações básicas para garantir que as variáveis do DB foram carregadas
@@ -78,8 +81,21 @@ def formatar_nome(nome):
     return " ".join(resultado)
 
 #--------------------------------------------------------------------------------------------------------#
-#Função que envia e-mail para a recuperação de senha
-def enviar_email(email):
+#Função que gera um token seguro para a confirmação de cadastro ou refazer a senha
+s = Serializer(CHAVE_SECRETA)
+def gerador_token(email):
+    token = s.dumps(email, salt='email-confirm')
+    return token
+
+def enviar_confirmacao(email):
+    token = gerador_token(email)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    html = render_template('confirma_cadastro.html', confirm_url=confirm_url)
+    # Aqui você chama sua função de envio de e-mail
+    enviar_email(email, html)
+#--------------------------------------------------------------------------------------------------------#
+#Função que envia e-mail para a confirmar cadastro ou refazer a senha
+def enviar_email(email, html):
     #Configurações
     port = os.getenv("port")
     smtp_server = os.getenv("smtp_server")
@@ -89,15 +105,16 @@ def enviar_email(email):
     sender_email = os.getenv("sender_email")
     receiver_email = email
     # Conteúdo de email
-    subject = "Email HTML Email sem Anexo"
-    html = """\
-    <html>
-    <body>
-        <p>Oi,<br>
-        Este é um email de <b>teste</b> sem um anexo usando <a href="https://www.python.org">Python</a>.</p>
-    </body>
-    </html>
-    """
+    subject = "Confirmação de cadastro"
+    # html = """\
+    # <html>
+    # <body>
+    #     <p>Olá,<br>
+    #     Este é um email de <b>confirmação do cadastro</b> clique no link a seguir para confirmar o teu cadastro <a href="http://127.0.0.1:5000/confirmar/{token}">Clique aqui para confirmar o cadastro</a><br>
+    #     Atenciosamente a Equipe de Desenvolvedores.</p>
+    # </body>
+    # </html>
+    # """
 
     # Criar uma mensagem multipart e definir cabeçalhos
     message = MIMEMultipart()
@@ -216,16 +233,38 @@ def cadastro_usuario():
         else:
         #Conversão da senha em hash pelo bcrypt
             hashed = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
-            novo_usuario = Usuarios(nome=nome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso)
+            novo_usuario = Usuarios(nome=nome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso, confirmado=False)
+            
             db.session.add(novo_usuario)
             db.session.commit()
-            
-            #Ao cadastras usando o login_user já deixa o usuário automaticamente logado no sistema
-            login_user(novo_usuario)
-            return redirect(url_for("home"))  # Evita resubmissão do formulário
+            enviar_confirmacao(email)
+
+            flash("Cadastro realizado! Verifique seu e-mail para confirmar o acesso.", "info")
+            return redirect(url_for("cadastro_finalizar", email=novo_usuario.email))  # Evita resubmissão do formulário
         
     return render_template("cadastro_usuarios.html")
+#Rota de para a página de confirmação do cadastros
+@app.route('/cadastro_finalizar', methods=["POST", "GET"])
+def cadastro_finalizar():
+    email = request.args.get("email")
+    return render_template("cadastro_finalizar.html", email=email)
 
+#Rota para reenvio do e-mail
+@app.route('/reenviar_confirmacao/<email>', methods=['GET'])
+def reenviar_confirmacao(email):
+    usuario = Usuarios.query.filter_by(email=email).first()
+
+    if not usuario:
+        flash("Usuário não encontrado.", "danger")
+        return redirect(url_for("cadastro_finalizar", email=email))
+
+    if usuario.confirmado:
+        flash("Este e-mail já foi confirmado.", "info")
+        return redirect(url_for("login"))
+
+    enviar_confirmacao(email)
+    flash("E-mail de confirmação reenviado com sucesso!", "success")
+    return redirect(url_for("cadastro_finalizar", email=email))
 
 #Rota para a página central da aplicação
 @app.route("/home")
@@ -244,13 +283,44 @@ def recuperar():
             print('email invalido')
             return redirect(url_for("recuperar"))
         else:
-            enviar_email(email)
+            enviar_confirmacao(email)
             flash(f"E-mail enviado com sucesso.", "warning")
             print("email valido")
             return redirect(url_for("recuperar"))
     
     
     return render_template("recuperar_senha.html")
+#Rota de confirmação para o cadastro
+@app.route('/confirmar/<token>')
+def confirm_email(token):
+    s = Serializer(CHAVE_SECRETA)
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=3600)  # 1 hora
+         # Consulta ao banco
+        usuario = Usuarios.query.filter_by(email=email).first()
+
+        if not usuario:
+            flash("Usuário não encontrado.", "danger")
+            return redirect(url_for('login'))
+
+        if usuario.confirmado:
+            flash("E-mail já foi confirmado anteriormente.", "info")
+            return redirect(url_for('login'))
+
+        # Atualiza o status
+        usuario.confirmado = True
+        db.session.commit()
+
+        flash("E-mail confirmado com sucesso!", "success")
+        return redirect(url_for('login'))
+
+    except SignatureExpired:
+        flash("O link expirou. Solicite um novo.", "danger")
+        return redirect(url_for('login'))
+    except BadSignature:
+        flash("Token inválido.", "danger")
+        return redirect(url_for('login'))
+
 
 if __name__ == "__main__":
     app.run(debug=True) 

@@ -30,6 +30,16 @@ footer, header {
   margin: 0;
 
 }
+.info {
+      font-size: 0.9em;
+      color: #888;
+      margin-top: 10px;
+}
+
+.accordion-body {
+  max-width: 80%;
+  overflow-wrap: break-word;
+}
 @media (max-width: 768px) {
   main {
     padding: 1rem;
