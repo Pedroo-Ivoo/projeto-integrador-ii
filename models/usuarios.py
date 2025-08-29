@@ -7,5 +7,5 @@ class Usuarios(UserMixin, db.Model):
     nome = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     senha = db.Column(db.LargeBinary, nullable=False, unique=True)
-    confirmado = db.Column(db.Boolean, default=False, nullable=False)
     perfilAcesso = db.Column(db.String(50), nullable=False)
+    confirmado = db.Column(db.Boolean, default=False, nullable=False)

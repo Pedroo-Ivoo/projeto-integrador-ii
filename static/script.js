@@ -57,6 +57,30 @@ function mostrarSenha(){
                 $(this).removeClass('is-valid').addClass('is-invalid');
             }
             });
+
+            // Metodo que valida a confirmação de correspondecencia entre as senhas
+            $('#confirmaSenha').on('input', function() {
+            const senha = $('#senha').val();
+            const confirmaSenha = $(this).val();
+            const feedback = $('.feedback-senha');
+
+            if (confirmaSenha === "") {
+                $(this).removeClass('is-valid is-invalid');
+                feedback.text('');
+                return;
+            }
+
+            if (confirmaSenha === senha) {
+                $(this).removeClass('is-invalid').addClass('is-valid');
+                feedback.removeClass('text-danger').addClass('text-success').text('Senhas correspondem');
+
+            } else {
+                $(this).removeClass('is-valid').addClass('is-invalid');
+                feedback.removeClass('text-success').addClass('text-danger').text('As senhas não coincidem');
+
+            }
+             });
+            
             // Função chamada quando estiver preenchendo o campo do usuário.
             $("#usuario").on("input",function(){
             const usuario = $(this).val();
@@ -74,6 +98,6 @@ function mostrarSenha(){
             }
 
 });
-
+// Variaveis que controlam o accordion
 const accordionCollapseElementList = document.querySelectorAll('#myAccordion .collapse')
 const accordionCollapseList = [...accordionCollapseElementList].map(accordionCollapseEl => new bootstrap.Collapse(accordionCollapseEl))

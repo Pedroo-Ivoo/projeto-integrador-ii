@@ -83,19 +83,21 @@ def formatar_nome(nome):
 #--------------------------------------------------------------------------------------------------------#
 #Função que gera um token seguro para a confirmação de cadastro ou refazer a senha
 s = Serializer(CHAVE_SECRETA)
-def gerador_token(email):
-    token = s.dumps(email, salt='email-confirm')
+
+
+def gerador_token(email, salt):
+    token = s.dumps(email, salt )
     return token
 
-def enviar_confirmacao(email):
-    token = gerador_token(email)
-    confirm_url = url_for('confirm_email', token=token, _external=True)
-    html = render_template('confirma_cadastro.html', confirm_url=confirm_url)
+def enviar_confirmacao(email, salt, pagina, nome_funcao, assunto):
+    token = gerador_token(email, salt)
+    confirm_url = url_for(nome_funcao, token=token, _external=True)
+    html = render_template(pagina, confirm_url=confirm_url)
     # Aqui você chama sua função de envio de e-mail
-    enviar_email(email, html)
+    enviar_email(email, html, assunto)
 #--------------------------------------------------------------------------------------------------------#
 #Função que envia e-mail para a confirmar cadastro ou refazer a senha
-def enviar_email(email, html):
+def enviar_email(email, html, assunto):
     #Configurações
     port = os.getenv("port")
     smtp_server = os.getenv("smtp_server")
@@ -105,16 +107,8 @@ def enviar_email(email, html):
     sender_email = os.getenv("sender_email")
     receiver_email = email
     # Conteúdo de email
-    subject = "Confirmação de cadastro"
-    # html = """\
-    # <html>
-    # <body>
-    #     <p>Olá,<br>
-    #     Este é um email de <b>confirmação do cadastro</b> clique no link a seguir para confirmar o teu cadastro <a href="http://127.0.0.1:5000/confirmar/{token}">Clique aqui para confirmar o cadastro</a><br>
-    #     Atenciosamente a Equipe de Desenvolvedores.</p>
-    # </body>
-    # </html>
-    # """
+    subject = assunto
+    
 
     # Criar uma mensagem multipart e definir cabeçalhos
     message = MIMEMultipart()
@@ -237,19 +231,26 @@ def cadastro_usuario():
             
             db.session.add(novo_usuario)
             db.session.commit()
-            enviar_confirmacao(email)
+            #Variaveis para o envio da confirmação
+            salt='email-confirm'
+            pagina = 'confirma_cadastro.html'
+            nome_funcao = 'confirm_email'
+            assunto = "Confirmação de cadastro"
+
+            enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
 
             flash("Cadastro realizado! Verifique seu e-mail para confirmar o acesso.", "info")
             return redirect(url_for("cadastro_finalizar", email=novo_usuario.email))  # Evita resubmissão do formulário
         
     return render_template("cadastro_usuarios.html")
+
 #Rota de para a página de confirmação do cadastros
 @app.route('/cadastro_finalizar', methods=["POST", "GET"])
 def cadastro_finalizar():
     email = request.args.get("email")
     return render_template("cadastro_finalizar.html", email=email)
 
-#Rota para reenvio do e-mail
+#Rota para reenvio do e-mail no caso do usuário não receber o e-mail que é enviado ao final do cadastro.
 @app.route('/reenviar_confirmacao/<email>', methods=['GET'])
 def reenviar_confirmacao(email):
     usuario = Usuarios.query.filter_by(email=email).first()
@@ -261,8 +262,13 @@ def reenviar_confirmacao(email):
     if usuario.confirmado:
         flash("Este e-mail já foi confirmado.", "info")
         return redirect(url_for("login"))
-
-    enviar_confirmacao(email)
+    #variavel do envio
+    salt='email-confirm'
+    pagina = 'confirma_cadastro.html'
+    nome_funcao = 'confirm_email'
+    assunto = "Confirmação de cadastro"
+    
+    enviar_confirmacao(email,salt,pagina,nome_funcao, assunto)
     flash("E-mail de confirmação reenviado com sucesso!", "success")
     return redirect(url_for("cadastro_finalizar", email=email))
 
@@ -270,7 +276,8 @@ def reenviar_confirmacao(email):
 @app.route("/home")
 def home():
     return render_template("home.html")
-    
+
+#Rota para a recuperação da senha
 @app.route("/recuperar_senha", methods=["POST", "GET"])
 def recuperar():
     if request.method == "POST":
@@ -278,24 +285,34 @@ def recuperar():
         print(email)
          #Busca do Banco de dados se há usuario com o mesmo nome
         cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
+        
         if not cadastro_existente:
             flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
             print('email invalido')
             return redirect(url_for("recuperar"))
         else:
-            enviar_confirmacao(email)
+            salt = 'reset-password'
+            pagina = 'email_senha.html'
+            nome_funcao = 'nova_senha'
+            assunto = "Redefinir nova senha"
+
+            enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
+            
             flash(f"E-mail enviado com sucesso.", "warning")
             print("email valido")
             return redirect(url_for("recuperar"))
     
     
     return render_template("recuperar_senha.html")
+
 #Rota de confirmação para o cadastro
+#Essa rota é chamada no pelo link do e-mail e quando utlizada confirma o cadastro do usuário
+#Mudando o seu status no banco de dados para "confirmado=True" que permitirá o acesso ao site.
 @app.route('/confirmar/<token>')
 def confirm_email(token):
     s = Serializer(CHAVE_SECRETA)
     try:
-        email = s.loads(token, salt='email-confirm', max_age=3600)  # 1 hora
+        email = s.loads(token, salt='email-confirm', max_age=1800)  # 30 minutos 
          # Consulta ao banco
         usuario = Usuarios.query.filter_by(email=email).first()
 
@@ -321,7 +338,54 @@ def confirm_email(token):
         flash("Token inválido.", "danger")
         return redirect(url_for('login'))
 
+#Rota de redefinição de nova senha
+@app.route('/redefinir/<token>', methods=["GET", "POST"])
+def nova_senha(token):
+    s = Serializer(CHAVE_SECRETA)
+    try:
+        email = s.loads(token, salt='reset-password', max_age=1800)  # 30 minutos 
+         # Consulta ao banco
+        usuario = Usuarios.query.filter_by(email=email).first()
 
+        if not usuario:
+            flash("Usuário não encontrado.", "danger")
+            return redirect(url_for('login'))
+
+        if request.method =="POST":
+            senha= request.form.get("senha", "").strip()
+            confirmar_senha = request.form.get("confirmar_senha", "").strip()
+            
+            #Inicia com um verificador de erros inicialmente configurado no False, na ocorrencia de erro irá modificar para TRUE
+            existe_erro= False
+            #Verifica se a senha está preenchida
+            if not senha:
+                flash("O campo 'Senha' é obrigatório.", "warning")
+                existe_erro =True 
+            #Na existencia de erro irá redirecionar para a página cadastro com as informações.            
+            if existe_erro:
+                return redirect(url_for("nova_senha",token=token))
+            if senha != confirmar_senha:
+                flash("As senhas não coincidem.", "warning")
+                existe_erro = True
+            else:
+            # Atualiza o status
+            #Critptografa a senha
+                hashed = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
+                usuario.senha = hashed
+                db.session.commit()
+
+                flash("Senha alterada com sucesso!", "success")
+                return redirect(url_for('login', token=token))
+
+        return render_template("nova_senha.html",token=token)
+
+    except SignatureExpired:
+        flash("O link expirou. Solicite um novo.", "danger")
+        return redirect(url_for('login'))
+    except BadSignature:
+        flash("Token inválido.", "danger")
+        return redirect(url_for('login'))
+    
 if __name__ == "__main__":
     app.run(debug=True) 
     
