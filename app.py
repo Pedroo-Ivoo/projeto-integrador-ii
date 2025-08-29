@@ -22,7 +22,7 @@ app = Flask(__name__)
 # logout, verificação de sessão e redirecionamento de usuários não autenticados.
 logMan = LoginManager(app)
 #O view redireciona para a rota que realiza o login evitando que usuario sem acesso receba a mensagem de não autorizado em uma página 401
-logMan.login_view = "/"
+logMan.login_view = "login"
 #Mensagem que aparecerá na pagina de login
 logMan.login_message = "Você precisa estar logado para acessar esta página."
 logMan.login_message_category = "warning"
@@ -42,9 +42,10 @@ db.init_app(app)
 
 #-----------------------------------------Funções--------------------------------------------------------#
 #Metodo necessário para acessar o site sem o login realizado.
-@logMan.user_loader
-def load_user(user_id):
-    return None  # Nenhum usuário será carregado por enquanto
+@logMan.user_loader #quando estamos logado o que fica guardado é o id
+def user_loader(id):
+    usuario = Usuarios.query.filter_by(id=id).first()
+    return usuario
 
 #--------------------------------------------------------------------------------------------------------#
 
@@ -138,6 +139,8 @@ def index():
 @login_required
 def logout():
     logout_user()
+    flash("Logout realizado com sucesso.", "success")
+
     return redirect(url_for("index"))
 
 #Rota para realização do login
