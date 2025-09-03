@@ -1,6 +1,7 @@
 /* Garante que o body ocupe toda a altura da tela e organize as seções verticalmente */
 html, body {
   height: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
   display: flex;
@@ -10,7 +11,15 @@ html, body {
 
 main {
   flex: 1;
-  /* min-height: 60vh; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Remova a propriedade position: fixed; daqui */
+footer, header {
+  width: 100%;
+  padding: 1rem 0;
+  margin: 0;
 }
 
 .box-form {
@@ -24,12 +33,13 @@ div i {
   color: gray;
 }
 
-footer, header {
+/* footer, header {
   width: 100%;
   padding: 1rem 0;
   margin: 0;
 
-}
+} */
+
 .info {
       font-size: 0.9em;
       color: #888;
@@ -52,4 +62,9 @@ footer, header {
   footer {
     margin-top: 1rem;
   }
+}
+.card-img-top {
+  height: 180px;
+  width: 100%;
+  object-fit: cover;
 }
