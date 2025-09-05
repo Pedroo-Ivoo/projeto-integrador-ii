@@ -40,7 +40,7 @@
       
     <p>Enviamos um e-mail para <strong>{{ email }}</strong> com o link de confirmação.</p>
     <p>Verifique sua caixa de entrada e também a pasta de spam.</p>
-    <a href="{{ url_for('reenviar_confirmacao', email=email) }}" class="btn btn-warning">
+    <a href="{{ url_for('usuarios.reenviar_confirmacao', email=email) }}" class="btn btn-warning">
   Reenviar e-mail de confirmação
 </a>
     <div class="info">

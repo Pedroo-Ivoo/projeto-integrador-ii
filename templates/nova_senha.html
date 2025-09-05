@@ -40,7 +40,7 @@
       {% endfor %} {% endif %} {% endwith %}
 
       <div class="box-form container-md">"
-        <form method="post" action="{{ url_for('nova_senha', token=token) }}">
+        <form method="post" action="{{ url_for('usuarios.nova_senha', token=token) }}">
           <div class="mb-3">
             <label for="senha"> Senha</label>
             <div class="input-group">
