@@ -15,7 +15,6 @@ main {
   padding-bottom: 1rem;
 }
 
-/* Remova a propriedade position: fixed; daqui */
 footer, header {
   width: 100%;
   padding: 1rem 0;
@@ -33,12 +32,9 @@ div i {
   color: gray;
 }
 
-/* footer, header {
-  width: 100%;
-  padding: 1rem 0;
-  margin: 0;
-
-} */
+.nav{
+  padding-right: 4.78rem;
+}
 
 .info {
       font-size: 0.9em;
@@ -67,4 +63,21 @@ div i {
   height: 180px;
   width: 100%;
   object-fit: cover;
+}
+
+section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.conteudo_centralizado {
+  width: 100%;
+  max-width: 500px;
+}
+.acordeon {
+  width: 100%;
+  max-width: 700px;
 }

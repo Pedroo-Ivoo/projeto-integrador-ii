@@ -19,7 +19,7 @@ app = Flask(__name__)
 # logout, verificação de sessão e redirecionamento de usuários não autenticados.
 logMan = LoginManager(app)
 #O view redireciona para a rota que realiza o login evitando que usuario sem acesso receba a mensagem de não autorizado em uma página 401
-logMan.login_view = "login"
+logMan.login_view = "usuarios.login"
 #Mensagem que aparecerá na pagina de login
 logMan.login_message = "Você precisa estar logado para acessar esta página."
 logMan.login_message_category = "warning"
@@ -53,21 +53,32 @@ def user_loader(id):
 def index():
     return render_template("index.html")
 
-#Rota para realizar o logout do sistema.
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    flash("Logout realizado com sucesso.", "success")
+# #Rota para realizar o logout do sistema.
+# @app.route("/logout")
+# @login_required
+# def logout():
+#     logout_user()
+#     flash("Logout realizado com sucesso.", "success")
 
-    return redirect(url_for("index"))
-
+#     return redirect(url_for("index"))
+def exibir_nome(current_user):
+        nomes = current_user.nome.split()
+        nome_composto = " ".join(nomes[:2])
+        return nome_composto
 #Rota para a página central da aplicação
 @app.route("/home")
-def home():
-    return render_template("home.html")
+@login_required
 
+def home():
+    if current_user.confirmado == False:
+        flash("Por favor, confirme seu e-mail para acessar essa página.", "warning")
+        return redirect(url_for("usuarios.validar"))
     
+    nome_formatado = exibir_nome(current_user)
+
+    return render_template("home.html", nome_formatado=nome_formatado)
+
+
 if __name__ == "__main__":
     app.run(debug=True) 
     

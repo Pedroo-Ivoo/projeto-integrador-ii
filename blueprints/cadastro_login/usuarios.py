@@ -1,3 +1,4 @@
+from smtplib import SMTPDataError
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
@@ -165,6 +166,9 @@ def confirm_email(token):
     except BadSignature:
         flash("Token inválido.", "danger")
         return redirect(url_for('usuarios.login'))
+    except SMTPDataError:
+        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
+        return redirect(url_for('usuarios.login'))
     
 #Rota de para a página de confirmação do cadastros
 @usuarios_bp.route('/cadastro_finalizar', methods=["POST", "GET"])
@@ -276,3 +280,35 @@ def nova_senha(token):
     except BadSignature:
         flash("Token inválido.", "danger")
         return redirect(url_for('usuarios.login'))
+    except SMTPDataError:
+        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
+        return redirect(url_for('usuarios.login'))
+    
+#Rota para validação de usuários que não confirmaram o e-mail
+@usuarios_bp.route('/validar', methods=["GET", "POST"])
+def validar():
+    try:
+        if request.method == "POST":
+            email = request.form.get("email", "").lower().strip()
+            print(email)
+            #Busca do Banco de dados se há usuario com o mesmo nome
+            cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
+            
+            if not cadastro_existente:
+                flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
+                print('email invalido')
+                return redirect(url_for("usuarios.validar"))
+            else:
+                salt='email-confirm'
+                pagina = 'confirma_cadastro.html'
+                nome_funcao = 'usuarios.confirm_email'
+                assunto = "Confirmação de cadastro"
+
+                enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
+                
+                flash(f"E-mail enviado com sucesso.", "warning")
+                print("email valido")
+                return redirect(url_for("usuarios.validar"))
+    except SMTPDataError:
+        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
+    return render_template("validar_cadastro.html")
