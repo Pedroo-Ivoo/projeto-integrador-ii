@@ -11,7 +11,7 @@ function mostrarSenha(){
         btnExibeSenha.classList.replace("bi-eye-slash", "bi-eye");
     }
 }
-
+if (typeof $ !== 'undefined'){
  $('#form').on('submit', function(event){
                 console.log("Função de submit acionada!");
                 event.preventDefault();
@@ -98,6 +98,35 @@ function mostrarSenha(){
             }
 
 });
+};
 // Variaveis que controlam o accordion
 const accordionCollapseElementList = document.querySelectorAll('#myAccordion .collapse')
 const accordionCollapseList = [...accordionCollapseElementList].map(accordionCollapseEl => new bootstrap.Collapse(accordionCollapseEl))
+
+// Função do modal de bloqueio
+
+// Seleciona todos os botões que devem abrir o modal
+const botoes = document.querySelectorAll('.btn-bloqueio');
+
+// Seleciona o único modal de bloqueio
+const modalBloqueio = document.querySelector('.janela-modal');
+
+// Adiciona o evento de clique a cada botão
+botoes.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+        event.preventDefault(); // Impede a navegação do link
+        
+        // Se o modal de bloqueio existir, alterna a visibilidade dele
+        if (modalBloqueio) {
+            const actualStyle = modalBloqueio.style.display;
+            modalBloqueio.style.display = actualStyle === 'block' ? 'none' : 'block';
+        }
+    });
+});
+
+// Adiciona o evento para fechar o modal clicando fora
+window.onclick = function(event) {
+    if (event.target === modalBloqueio) {
+        modalBloqueio.style.display = 'none';
+    }
+};

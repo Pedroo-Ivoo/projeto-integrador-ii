@@ -20,3 +20,10 @@ def formatar_nome(nome):
             resultado.append(palavra)
     
     return " ".join(resultado)
+
+#Função que exibe o inicio do nome do cadastro.
+def exibir_nome(current_user):
+        nomes = current_user.nome.split()
+        nome_composto = " ".join(nomes[:2])
+        return nome_composto
+    

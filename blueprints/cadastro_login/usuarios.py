@@ -28,7 +28,7 @@ def login():
             #Verificador se a senha com hash corresponde com a senha do salva
             if bcrypt.checkpw(senha.encode('utf-8'), usuario_cadastrado.senha):
                 login_user(usuario_cadastrado)
-                return redirect(url_for("home"))
+                return redirect(url_for("home.home"))
             else:
                 flash(f"Usuário ou senha inválidos", "danger")
                 return redirect(url_for("usuarios.login"))

@@ -4,3 +4,4 @@
 #------------------------------------------------------------------------------------------------------#
 
 from blueprints.cadastro_login.usuarios import usuarios_bp
+from blueprints.home.home import home_bp

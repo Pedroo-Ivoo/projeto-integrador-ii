@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from dotenv import load_dotenv
@@ -6,11 +7,11 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer as Serializer
 
 
-
 from models import Usuarios
 from config import db # Importa o inicializador do banco de dados
 
-from blueprints import usuarios_bp  # Importa o blueprint de usuários
+from blueprints import usuarios_bp, home_bp # Importa o blueprint de usuários
+from utils import cadastro_ativo, perfis_permitidos # Importa o decorador cadastro_ativo
 load_dotenv()
 
 app = Flask(__name__)
@@ -29,10 +30,10 @@ app.secret_key = CHAVE_SECRETA
 s = Serializer(CHAVE_SECRETA)
 
 #Banco de dados local para testes
-# POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
+POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
 
 #Banco de dados hospedado no aiven
-POSTGRES_URI = os.getenv("DATABASE_URL")
+# POSTGRES_URI = os.getenv("DATABASE_URL")
 # Verificações básicas para garantir que as variáveis do DB foram carregadas
 if not POSTGRES_URI:
     raise ValueError("DATABASE_URL não definida! Verifique o arquivo .env ou variáveis de ambiente")
@@ -40,8 +41,9 @@ if not POSTGRES_URI:
 app.config["SQLALCHEMY_DATABASE_URI"] = POSTGRES_URI
 db.init_app(app)
 
-# Registro do blueprint de usuários
+# Registro do blueprints
 app.register_blueprint(usuarios_bp)
+app.register_blueprint(home_bp)
 
 
 
@@ -57,30 +59,14 @@ def user_loader(id):
 def index():
     return render_template("index.html")
 
-# #Rota para realizar o logout do sistema.
-# @app.route("/logout")
-# @login_required
-# def logout():
-#     logout_user()
-#     flash("Logout realizado com sucesso.", "success")
-
-#     return redirect(url_for("index"))
-def exibir_nome(current_user):
-        nomes = current_user.nome.split()
-        nome_composto = " ".join(nomes[:2])
-        return nome_composto
-#Rota para a página central da aplicação
-@app.route("/home")
-@login_required
-
-def home():
-    if current_user.confirmado == False:
-        flash("Por favor, confirme seu e-mail para acessar essa página.", "warning")
-        return redirect(url_for("usuarios.validar"))
     
-    nome_formatado = exibir_nome(current_user)
 
-    return render_template("home.html", nome_formatado=nome_formatado)
+@app.route("/pontodigital")
+@login_required
+@cadastro_ativo
+@perfis_permitidos(["Motorista", "Admin"])
+def pontodigital():
+    return render_template("pontodigital.html")
 
 
 if __name__ == "__main__":
