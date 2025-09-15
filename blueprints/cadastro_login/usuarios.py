@@ -59,7 +59,9 @@ def logout():
 def cadastro_usuario():
     if request.method == "POST":
         nome_recebido= request.form.get("nome","").strip() #as "" faz com que se o input vir sem dados o fluxo não quebre aos tentar aplicar o strip() é preciso validar o dado antes de enviar ao banco de dados
+        sobrenome_recebido= request.form.get("sobrenome","").strip() #as "" faz com que se o input vir sem dados o fluxo não quebre aos tentar aplicar o strip() é preciso validar o dado antes de enviar ao banco de dados
         nome= formatar_nome(nome_recebido)
+        sobrenome= formatar_nome(sobrenome_recebido)
         email = request.form.get("email", "").lower().strip()
         usuario = request.form.get("usuario", "").lower().strip()
         senha= request.form.get("senha", "").strip()
@@ -75,6 +77,11 @@ def cadastro_usuario():
         #Verifica se o nome está preenchido
         if not nome:
             flash("O campo 'Nome' é obrigatório.", "warning")
+            existe_erro = True
+            
+        #Verifica se o sobrenome está preenchido
+        if not sobrenome:
+            flash("O campo 'Sobrenome' é obrigatório.", "warning")
             existe_erro = True
         
         #Verifica se email está preenchido e se o formato está correto
@@ -103,7 +110,7 @@ def cadastro_usuario():
         #Verifica se todos os campos foram preenchidos. Se não forem não realiza o cadastro e retorna uma informação ao usuário.
         #Na existencia de erro irá redirecionar para a página cadastro com as informações.            
         if existe_erro:
-            return redirect(url_for("usuarios.cadastro_usuarios"))
+            return redirect(url_for("usuarios.cadastro_usuario"))
 
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------Segundo nivel de verificação--------------------------------------#
@@ -113,11 +120,11 @@ def cadastro_usuario():
         #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
         if cadastro_existente:
             flash(f"Nome de usuário já existe! Por favor, utilize outro nome de usuário.", "warning")
-            return redirect(url_for("usuarios.cadastro_usuarios"))
+            return redirect(url_for("usuarios.cadastro_usuario"))
         else:
         #Conversão da senha em hash pelo bcrypt
             hashed = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
-            novo_usuario = Usuarios(nome=nome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso, confirmado=False)
+            novo_usuario = Usuarios(nome=nome,sobrenome=sobrenome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso, confirmado=False)
             
             db.session.add(novo_usuario)
             db.session.commit()

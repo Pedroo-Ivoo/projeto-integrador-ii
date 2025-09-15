@@ -41,15 +41,20 @@
         <div class="container-md box-form" style="width: 80%;">
             <form id="form" method="POST" action="/cadastro_usuarios" >
                 <div class="row g-3">
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                         <label for="Nome">Nome (*)</label>
-                        <input class="form-control" type="text" name="nome" id="nome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido o uso do espaço como usuário">
+                        <input class="form-control" type="text" name="nome" id="nome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido deixar o campo vazio">
+                    </div>
+               
+                    <div class="col-sm-4">
+                        <label for="Sobrenome">Sobrenome (*)</label>
+                        <input class="form-control" type="text" name="sobrenome" id="sobrenome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido deixar o campo vazio">
                     </div>
                     <div class="col-md">
                         <label for="email">E-mail (*)</label>
                         <input class="form-control" type="email" name="email" id="email" title="exemplo@email.com" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
                     </div>
-                </div>
+                
                 
                     <div class="row g-3">
                         <div class="col-md-6">

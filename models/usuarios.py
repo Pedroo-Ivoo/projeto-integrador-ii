@@ -5,6 +5,7 @@ class Usuarios(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(50), nullable=False, unique=True)
     nome = db.Column(db.String(150), nullable=False)
+    sobrenome = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     senha = db.Column(db.LargeBinary, nullable=False, unique=True)
     perfilAcesso = db.Column(db.String(50), nullable=False)

@@ -3,5 +3,5 @@
 #=============Isso permite que você importe módulos do pacote usando a sintaxe de ponto.===============#
 from .email_utils import enviar_email, verifica_email
 from .token_utils import gerador_token, enviar_confirmacao, gerador_serializer
-from .formarta_nome_utils import formatar_nome, exibir_nome
+from .formarta_nome_utils import formatar_nome
 from .decoradores import cadastro_ativo, perfis_permitidos

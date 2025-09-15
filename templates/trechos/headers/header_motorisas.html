@@ -7,6 +7,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Motoristas</a></li>
+            <li><a class="dropdown-item" href="#">Veículos</a></li>
             <li><a class="dropdown-item btn-bloqueio" href="#">Pais <i class="bi bi-lock-fill" style="color: white"></i></a></li>
             <li><a class="dropdown-item btn-bloqueio" href="#">Alunos <i class="bi bi-lock-fill" style="color: white"></i></a></li>
           </ul>
@@ -25,7 +26,7 @@
             Perfil
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">{{ nome_formatado }}</a></li>
+            <li><a class="dropdown-item" href="#">{{ nome_usuario }}</a></li>
             <li><a class="dropdown-item" href="{{ url_for('pontodigital') }}">Ponto Digital</a></li>
             <li><a class="dropdown-item" href="{{ url_for('usuarios.logout') }}">Logout</a></li>
           </ul>
