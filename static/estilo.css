@@ -43,7 +43,7 @@ div i {
 }
 
 .accordion-body {
-  max-width: 80%;
+  max-width: 100%;
   overflow-wrap: break-word;
 }
 @media (max-width: 768px) {

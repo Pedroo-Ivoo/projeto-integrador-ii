@@ -18,7 +18,19 @@
   <a href="/" class="d-flex align-items-center mb-3 mb-md-0  link-body-emphasis text-decoration-none"> <span class="fs-4">Transporte Seguro</span> </a>  
     </header>
     <main class="container py-5">
-      <div class="row align-items-center">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+
+      <div
+        class="alert alert-{{ category }} container-md"
+        style="width: 100%; max-width: 31rem;"
+        role="alert"
+      >
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+      
+      <div class="row align-items-center mt-3">
         Bem vindo ao projeto Transporte seguro. Neste projeto criamos uma
         aplicação que gerencia as rotas de transporte dos alunos da sua casa até
         a ONG. Organizando as rotas de coleta dos alunos, sendo possível o

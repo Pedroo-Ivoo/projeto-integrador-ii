@@ -1,6 +1,6 @@
 from smtplib import SMTPDataError
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
 import bcrypt
 from models import Usuarios
@@ -19,6 +19,13 @@ usuarios_bp = Blueprint('usuarios', __name__)
 @usuarios_bp.route("/login", methods=["GET", "POST"])
 #Regra de negócio para acessar as páginas restritas
 def login():
+    #Redireciona para a página inicial caso o usuário já esteja logado
+    if request.method == "GET":
+        if current_user.is_authenticated:
+            return redirect(url_for("home.home"))
+    
+    
+    #Se o método for POST, tenta realizar o login
     if request.method== "POST":
         usuario = request.form.get("usuario", "").lower().strip()
         senha = request.form.get("senha","").lower().strip()
@@ -293,6 +300,7 @@ def nova_senha(token):
     
 #Rota para validação de usuários que não confirmaram o e-mail
 @usuarios_bp.route('/validar', methods=["GET", "POST"])
+@login_required
 def validar():
     try:
         if request.method == "POST":

@@ -21,17 +21,18 @@
   <a href="/" class="d-flex align-items-center mb-3 mb-md-0  link-body-emphasis text-decoration-none"> <span class="fs-4">Transporte Seguro</span> </a>  
     </header>
 
-  <main class="py-4">  
-  <div class="container">
+  <main class="py-4">
+  <section>  
+  <div>
     <h1>Cadastro realizado com sucesso!</h1>
-
     </div>
+
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
 
       <div
         class="alert alert-{{ category }} container-md"
-        style="width: 80%"
+        style="width: 100%; max-width: 31rem;"
         role="alert"
       >
         {{ message }}
@@ -47,7 +48,7 @@
       <p> O link expira em 30 minutos.</p>
      </div>
 
-     <div class="accordion accordion-flush" id="accordionFlushExample">
+     <div class="acordeon accordion accordion-flush" id="accordionFlushExample">
         <div class="accordion-item">
                 <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
@@ -60,7 +61,8 @@
     </div>
   </div>
   </div>
-  </main>
+</section>
+</main>
   <footer class="bg-dark text-white text-center py-3">
       Desenvolvido em grupo pelos alunos do grupo DRP07-PJI240 do Eixo de
       Computação da UNIVESP

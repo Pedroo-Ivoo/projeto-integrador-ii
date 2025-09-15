@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user 
-
+from datetime import timedelta
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer as Serializer
 
 
@@ -24,6 +24,9 @@ logMan.login_view = "usuarios.login"
 #Mensagem que aparecerá na pagina de login
 logMan.login_message = "Você precisa estar logado para acessar esta página."
 logMan.login_message_category = "warning"
+# Define a duração da sessão padrão para 1 hora.
+# Após esse tempo, o usuário será deslogado automaticamente e precisará fazer login novamente.
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 
 CHAVE_SECRETA = os.getenv("CHAVESEGURA")
 app.secret_key = CHAVE_SECRETA
