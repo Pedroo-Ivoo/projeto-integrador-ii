@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import os
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user 
@@ -56,6 +56,14 @@ app.register_blueprint(home_bp)
 def user_loader(id):
     usuario = Usuarios.query.filter_by(id=id).first()
     return usuario
+
+
+# Antes de cada requisição, define a sessão como permanente para aplicar a duração configurada
+# Assim a sessão será renovada a cada requisição, mantendo o usuário logado enquanto ele estiver ativo.
+@app.before_request
+def refresh_session():
+    session.permanent = True  
+
 #-------------------------------------Endpoints---------------------------------------------#
 #Rota da página inicial
 @app.route('/')
