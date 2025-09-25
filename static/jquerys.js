@@ -12,6 +12,11 @@ $(document).ready(function() {
                $('#cep').inputmask('99999-999');
             } 
             mascaraDoCep();
+            // Função do input mask para o preenchimento do campo do telefone
+            function mascaraDoTelefone(){
+               $('#telefone').inputmask('(99) 99999-9999');
+            }
+            mascaraDoTelefone();
             // Função que retorna o erro ao usuário
             function msgErro(mensagem){
                 $("#msg-error").html('<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i>' + mensagem + '</div>'); 

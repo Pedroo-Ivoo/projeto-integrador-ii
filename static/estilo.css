@@ -112,3 +112,16 @@ section {
     font-family: 'LexendDeca-Regular';
     color: var(--title);
 }
+
+.centraliza {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.info_cadastro{
+ width: 100%;
+ max-width: 80%;
+ text-align: justify;
+ }

@@ -3,3 +3,5 @@
 # permitindo que eles sejam importados de forma mais limpa em outros arquivos.
 # Ex: 'from models import Usuarios'
 from .usuarios import Usuarios
+from .regioes import Regioes
+from .motoristas import Motoristas

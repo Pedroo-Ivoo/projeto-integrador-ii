@@ -1,0 +1,1 @@
+from .motoristas import motoritas_bp
