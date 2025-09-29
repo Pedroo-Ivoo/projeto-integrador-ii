@@ -1,37 +1,33 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from config import db
-from models import Motoristas, Regioes, Usuarios
+from models import Motoristas, Regioes, Usuarios, Pais, Alunos
 from utils import cadastro_ativo, perfis_permitidos, formatar_nome, verifica_email
 
+alunos_bp = Blueprint('alunos', __name__)
 
-motoritas_bp = Blueprint('motoristas', __name__)
 
-
-@motoritas_bp.route('/cadastro_motoristas', methods=['GET', 'POST'])
+@alunos_bp.route('/cadastro_alunos', methods=['GET', 'POST'])
 @login_required
 @cadastro_ativo
-@perfis_permitidos(['Admin', 'Motorista'])
-def cadastro_motoristas():
+@perfis_permitidos(['Admin', 'Pais'])
+def cadastro_alunos():
     try:
         perfil = current_user.perfilAcesso
         nome_usuario = current_user.nome
         
         if request.method == "GET":
-            if current_user.perfilAcesso == "Motorista":
-                nome = current_user.nome
-                sobrenome = current_user.sobrenome
-                email = current_user.email
-                return render_template('cadastro_motoristas.html', nome=nome, sobrenome=sobrenome, email=email, perfil=perfil, nome_usuario=nome_usuario)
+            if current_user.perfilAcesso == 'Pais':
+                responsavel = Pais.query.filter_by(id_usuario=current_user.id).first()
+                return render_template('cadastro_alunos.html', perfil=perfil, nome_usuario=nome_usuario, responsavel=responsavel)
             else:
-                return render_template('cadastro_motoristas.html', perfil=perfil, nome_usuario=nome_usuario)
+                responsavel = Pais.query.all()
+                return render_template('cadastro_alunos.html', perfil=perfil, nome_usuario=nome_usuario, responsavel=responsavel)
         elif request.method == "POST":
             data = request.get_json()
             nome_recebido = data.get('nome', "").strip()
             sobrenome_recebido = data.get('sobrenome', "").strip()
-            email = data.get('email', "").strip().lower()
-            telefone = data.get('telefone', "").strip()
-            regiao = data.get('regiao').title()
+            id_responsavel = data.get('id_responsavel', "").strip() 
 
             
             nome = formatar_nome(nome_recebido)
@@ -50,17 +46,12 @@ def cadastro_motoristas():
                 
             #Verifica se o sobrenome está preenchido
             if not sobrenome:
-                erros.append("O campo 'Sobrenome' é obrigatório.")            
-            #Verifica se email está preenchido e se o formato está correto
-            if not email:
-                erros.append("O campo 'E-mail' é obrigatório.")    
-            #Verifica se no input o formato do e-mail está correto. Não estando retorna um aviso ao usuário
-            elif not verifica_email(email):
-                erros.append("O e-mail não corresponde ao padrão de e-mail:'exemplo@email.com'")    
+                erros.append("O campo 'Sobrenome' é obrigatório.")
             
-            #Verifica se o telefone está preenchido            
-            if not telefone:
-                erros.append("O campo 'Telefone' é obrigatório.")   
+            #Verifica se o responsavel está preenchido
+            if not id_responsavel:
+                erros.append("O campo 'Responsável' é obrigatório.")            
+           
             
             #Verifica se todos os campos foram preenchidos. Se não forem não realiza o cadastro e retorna uma informação ao usuário.
             #Na existencia de erro irá redirecionar para a página cadastro com as informações.            
@@ -69,19 +60,17 @@ def cadastro_motoristas():
 
             #-------------------------------------------------------------------------------------------------------#
             #-------------------------------------Segundo nivel de verificação--------------------------------------#
-            #Busca do Banco de dados se há usuario com o mesmo nome
-            cadastro_existente = Motoristas.query.filter_by(nome=nome, sobrenome=sobrenome).first() #realiza a consulta no banco.
+            #Busca do Banco de dados se há um aluno com o mesmo nome
+            cadastro_existente = Alunos.query.filter_by(nome=nome, sobrenome=sobrenome).first() #realiza a consulta no banco.
             
             #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
             if cadastro_existente:
-                return jsonify({"erros": ["Motorista já cadastrado."]}), 409
+                return jsonify({"erros": ["Aluno já cadastrado."]}), 409
             #Caso não haja cadastro existente, realiza o cadastro
             else:
-                regiao_obj = Regioes.query.filter_by(regiao=regiao).first()
-                usuario_obj = Usuarios.query.get(current_user.id)
-                novo_motorista = Motoristas(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
+                novo_aluno = Alunos(nome=nome,sobrenome=sobrenome, id_pais=id_responsavel)
                 
-                db.session.add(novo_motorista)
+                db.session.add(novo_aluno)
                 db.session.commit()
                 print("comitei aqui")
                 #Variaveis para o envio da confirmação

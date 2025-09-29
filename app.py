@@ -10,7 +10,7 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer 
 from models import Usuarios
 from config import db # Importa o inicializador do banco de dados
 
-from blueprints import usuarios_bp, home_bp, motoritas_bp # Importa o blueprint de usuários
+from blueprints import usuarios_bp, home_bp, motoritas_bp, pais_bp, alunos_bp # Importa o blueprint de usuários
 from utils import cadastro_ativo, perfis_permitidos # Importa o decorador cadastro_ativo
 load_dotenv()
 
@@ -33,10 +33,10 @@ app.secret_key = CHAVE_SECRETA
 s = Serializer(CHAVE_SECRETA)
 
 #Banco de dados local para testes
-# POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
+POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
 
 #Banco de dados hospedado no aiven
-POSTGRES_URI = os.getenv("DATABASE_URL")
+# POSTGRES_URI = os.getenv("DATABASE_URL")
 # Verificações básicas para garantir que as variáveis do DB foram carregadas
 if not POSTGRES_URI:
     raise ValueError("DATABASE_URL não definida! Verifique o arquivo .env ou variáveis de ambiente")
@@ -48,6 +48,8 @@ db.init_app(app)
 app.register_blueprint(usuarios_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(motoritas_bp)
+app.register_blueprint(pais_bp)
+app.register_blueprint(alunos_bp)
 
 
 

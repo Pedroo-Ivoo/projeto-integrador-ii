@@ -4,4 +4,6 @@
 # Ex: 'from models import Usuarios'
 from .usuarios import Usuarios
 from .regioes import Regioes
+from .pais import Pais
 from .motoristas import Motoristas
+from .alunos import Alunos

@@ -1,9 +1,5 @@
 $(document).ready(function() {
-    function mascaraDoTelefone(){
-        $('#telefone').inputmask('(99) 99999-9999');
-    }
-    mascaraDoTelefone();
-
+   
     // Função que retorna o erro ao usuário
     function msgErro(mensagem){
         $("#msg-error").html('<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i>' + mensagem + '</div>'); 
@@ -25,37 +21,24 @@ $(document).ready(function() {
                     msgErro('Favor preencher o campo sobrenome');
                     return false;
                 }
-                // Verifica se a email foi digitada
-                if($('#email').val().length == 0){
-                    msgErro('Favor preencher o campo email');
-                    return false;
-                }
-                // Verifica se a telefone foi digitada
-                if($('#telefone').val().length == 0){
-                    msgErro('Favor preencher o campo telefone');
-                    return false;
-                }
-                if ($('#regiao').val() == "") {
-                    msgErro('Favor selecionar a região da rota');
-                    return false;
-                }
+                
 
                 //Validar os dados do input
                 const nome = $('#nome').val().trim();
                 const sobrenome = $('#sobrenome').val().trim();
-                const email = $('#email').val().trim();
-                const telefone = $('#telefone').val().trim().replace(/\D/g, '');
-                const regiao = $('#regiao').val().trim();
+                const id_responsavel = $('#responsavel').val().trim();
 
+
+
+                //Criar um objeto com os dados do formulário
                 const data = {
                     nome: nome,
                     sobrenome: sobrenome,
-                    email: email,
-                    telefone: telefone,
-                    regiao: regiao
+                    id_responsavel: id_responsavel 
+
                 };
                 // Envia os dados para o servidor usando fetch API
-                fetch('/cadastro_motoristas', {
+                fetch('/cadastro_alunos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -90,4 +73,6 @@ $(document).ready(function() {
 
             
     })
+
+   
 })

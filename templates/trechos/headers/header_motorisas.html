@@ -8,8 +8,8 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ url_for('motoristas.cadastro_motoristas') }}" >Motoristas</a></li>
             <li><a class="dropdown-item" href="#">Veículos</a></li>
-            <li><a class="dropdown-item btn-bloqueio" href="#">Pais <i class="bi bi-lock-fill" style="color: white"></i></a></li>
-            <li><a class="dropdown-item btn-bloqueio" href="#">Alunos <i class="bi bi-lock-fill" style="color: white"></i></a></li>
+            <li><a class="dropdown-item btn-bloqueio" href="{{ url_for('pais.cadastro_pais') }}">Pais <i class="bi bi-lock-fill" style="color: white"></i></a></li>
+            <li><a class="dropdown-item btn-bloqueio" href="{{ url_for('alunos.cadastro_alunos') }}">Alunos <i class="bi bi-lock-fill" style="color: white"></i></a></li>
           </ul>
         </li>
       <li class="nav-item dropdown">

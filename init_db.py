@@ -1,6 +1,6 @@
 from app import app
 from config import db
-from models import Usuarios, Regioes, Motoristas  # Importe todas as suas classes de modelo aqui
+from models import Usuarios, Regioes, Motoristas, Pais, Alunos  # Importe todas as suas classes de modelo aqui
 
 with app.app_context():
     # Isso cria as tabelas no banco de dados
@@ -19,8 +19,7 @@ with app.app_context():
         db.session.add_all(regioes_padrao)
         db.session.commit()
 
-    db.session.add_all(regioes_padrao)
-    db.session.commit()
+   
 
     
   

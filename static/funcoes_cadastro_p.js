@@ -1,8 +1,23 @@
 $(document).ready(function() {
+    // Função do input mask para o telefone
     function mascaraDoTelefone(){
         $('#telefone').inputmask('(99) 99999-9999');
     }
     mascaraDoTelefone();
+
+    function mascaraDoCep(){
+        $('#cep').inputmask('99999-999');
+            } 
+    mascaraDoCep();
+        
+    function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+                $("#cep").val("");
+                $("#rua").val("");
+                $("#bairro").val("");
+                $("#cidade").val("");
+                $("#estado").val("");                
+            }
 
     // Função que retorna o erro ao usuário
     function msgErro(mensagem){
@@ -46,16 +61,32 @@ $(document).ready(function() {
                 const email = $('#email').val().trim();
                 const telefone = $('#telefone').val().trim().replace(/\D/g, '');
                 const regiao = $('#regiao').val().trim();
+                const cep = $('#cep').val().trim().replace(/\D/g, '');
+                const rua = $('#rua').val().trim();
+                const numero = $('#numero').val().trim();
+                const complemento = $('#complemento').val().trim();
+                const bairro = $('#bairro').val().trim();
+                const cidade = $('#cidade').val().trim();
+                const estado = $('#estado').val().trim();
 
+
+                //Criar um objeto com os dados do formulário
                 const data = {
                     nome: nome,
                     sobrenome: sobrenome,
                     email: email,
                     telefone: telefone,
-                    regiao: regiao
+                    regiao: regiao,
+                    cep: cep,
+                    rua: rua,
+                    numero: numero,
+                    complemento: complemento,
+                    bairro: bairro,
+                    cidade: cidade,
+                    estado: estado
                 };
                 // Envia os dados para o servidor usando fetch API
-                fetch('/cadastro_motoristas', {
+                fetch('/cadastro_pais', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -90,4 +121,54 @@ $(document).ready(function() {
 
             
     })
+
+    //Quando o campo cep perde o foco.
+            $("#cep").blur(function() {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = $(this).val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        $("#rua").val("...");
+                        $("#bairro").val("...");
+                        $("#cidade").val("...");
+                        $("#estado").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+                                $("#rua").val(dados.logradouro);
+                                $("#bairro").val(dados.bairro);
+                                $("#cidade").val(dados.localidade);
+                                $("#estado").val(dados.uf);
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            });
 })
