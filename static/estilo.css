@@ -125,3 +125,7 @@ section {
  max-width: 80%;
  text-align: justify;
  }
+ .box_aviso{
+  width: 100%; 
+  max-width: 31rem;
+ }

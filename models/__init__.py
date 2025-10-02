@@ -7,3 +7,4 @@ from .regioes import Regioes
 from .pais import Pais
 from .motoristas import Motoristas
 from .alunos import Alunos
+from .veiculos import Veiculos

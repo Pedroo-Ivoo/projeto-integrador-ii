@@ -1,0 +1,1 @@
+from .veiculos import veiculos_bp

@@ -10,7 +10,7 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer 
 from models import Usuarios
 from config import db # Importa o inicializador do banco de dados
 
-from blueprints import usuarios_bp, home_bp, motoritas_bp, pais_bp, alunos_bp # Importa o blueprint de usuários
+from blueprints import usuarios_bp, home_bp, motoritas_bp, pais_bp, alunos_bp, veiculos_bp # Importa o blueprint de usuários
 from utils import cadastro_ativo, perfis_permitidos # Importa o decorador cadastro_ativo
 load_dotenv()
 
@@ -50,6 +50,7 @@ app.register_blueprint(home_bp)
 app.register_blueprint(motoritas_bp)
 app.register_blueprint(pais_bp)
 app.register_blueprint(alunos_bp)
+app.register_blueprint(veiculos_bp)
 
 
 

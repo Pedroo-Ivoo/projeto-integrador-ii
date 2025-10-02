@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Veículos</title>
+    <!-- Link importando o bootstrap para o html -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://getbootstrap.com/docs/5.3/assets/css/docs.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="/static/estilo.css">
+
+</head>
+
+<body>
+    <header class="navbar bg-primary" data-bs-theme="dark" class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
+    </a> 
+      {% if perfil == 'Admin' %}
+        {% include 'trechos/headers/hearder_admin.html' %}
+      {% elif perfil == 'Motorista' %}
+        {% include 'trechos/headers/header_motorisas.html' %}
+      {% elif perfil == 'Pais' %}
+        {% include 'trechos/headers/header_pais.html' %}
+      {% endif %}
+    </header>
+    <main>
+        <h1 class="d-flex justify-content-center mb-4">Cadastro de Veículos</h1>
+        <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
+        <div id="msg-feedback box_aviso container-md"></div>
+        <div id="msg-error box_aviso container-md"></div>
+        <div class="centraliza">
+         {% if perfil == 'Admin' %}
+            {% include 'trechos/cad_veiculos/info_admin.html' %}
+         {% elif perfil == 'Motorista' %}
+            {% include 'trechos/cad_motorista/info_motoristas.html' %}
+         {% endif %}
+        </div>
+        {% if not lista_motoristas %}
+<div class="alert alert-danger box_aviso container-md">Não é possível enviar o formulário sem um motorista cadastrado.</div>
+{% endif %}
+
+        <div class="container-md box-form" style="width: 80%;">
+            <form id="form" method="POST" action="/cadastro_veiculos" >
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label for="Placa">Placa (*)</label>
+                        <input class="form-control" type="text" name="placa" id="placa" required   title="Não é permitido deixar o campo vazio" placeholder="(AAA-9999 ou AAA9A99)">
+                    </div>
+               
+                    <div class="col-sm-6">
+                        <label for="Modelo">Modelo (*)</label>
+                        <input class="form-control" type="text" name="modelo" id="modelo" required pattern=".*[A-Za-z0-9].*" title="Não é permitido deixar o campo vazio">
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-sm-3">
+                        <label for="ano_fabricação">Data de Fabricação (*)</label>
+                        <input class="form-control" type="text" name="ano_fabricacao" id="ano_fabricacao" title="Ano de Fabricação" required pattern="^[0-9]{4}$" placeholder="Ano (AAAA)">
+                    </div>
+                
+                    <div class="col-md mb-3">
+                        <label for="tipo">Tipo de transporte (*)</label>
+                        <select class="form-control" name="tipo" id="tipo" required>
+                        <option value="">Selecione</option>
+                        <option value="Van">Van</option>
+                        <option value="Micro-ônibus">Micro-ônibus</option>
+                        <option value="Ônibus">Ônibus</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md mb-3">
+                        <label for="vagas">Vagas (*)</label>
+                        <select class="form-control" name="vagas" id="vagas" required>
+                        <option value="">Selecione</option>
+                        
+                        </select>
+                        
+                    </div>
+                    <div class="col-md mb-3">
+                      {%  if not lista_motoristas %}
+                      <label for="motorista">Motorista (*)</label>
+                      <!-- <select class="form-control" name="motorista" id="motorista" required> -->
+                        <select class="form-control" name="motorista" id="motorista" required {% if not lista_motoristas %}disabled{% endif %}>
+                          <!-- <option value=" " selected>É preciso ter motorista cadastrado!</option> -->
+                          {% else %}
+                          <label for="motorista">Motorista (*)</label>
+                          <select class="form-control" name="motorista" id="motorista" required >
+                          <label for="motorista">Motorista (*)</label>
+                            <option value="" selected disabled>Selecione o Responsável</option>
+                                {% for moto in lista_motoristas %}
+                                    <option value="{{ moto.id }}">{{ moto.nome }} {{ moto.sobrenome }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        
+                      </select>
+                        
+                    </div>
+                </div>
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
+                            <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
+                            <a href="{{ url_for('home.home') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </main>
+    <footer class="bg-dark text-white text-center py-3 mt-3">
+      Desenvolvido em grupo pelos alunos do grupo DRP07-PJI240 do Eixo de
+      Computação da UNIVESP
+    </footer>
+
+    <!-- Jquery para o api do CEP, alteração do icone de mostrar e ocultar a senha e a máscara do cep. -->
+     <!-- Importante lembrar que para o funcionamento correto a ordem importa. -->
+
+
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- <script src="/static/script.js"></script> -->
+
+    
+    
+    <script src="/static/funcoes_cadastro_veiculos.js"></script>
+</body>
+
+</html>

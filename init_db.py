@@ -1,6 +1,6 @@
 from app import app
 from config import db
-from models import Usuarios, Regioes, Motoristas, Pais, Alunos  # Importe todas as suas classes de modelo aqui
+from models import Usuarios, Regioes, Motoristas, Pais, Alunos, Veiculos  # Importe todas as suas classes de modelo aqui
 
 with app.app_context():
     # Isso cria as tabelas no banco de dados

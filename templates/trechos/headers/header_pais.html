@@ -7,7 +7,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item btn-bloqueio" href="{{ url_for('motoristas.cadastro_motoristas') }}">Motoristas <i class="bi bi-lock-fill" style="color: white"></i></a></li>
-            <li><a class="dropdown-item btn-bloqueio" href="#">Veículos <i class="bi bi-lock-fill" style="color: white"></i></a></li>
+            <li><a class="dropdown-item btn-bloqueio" href="{{ url_for('veiculos.cadastro_veiculos') }}" >Veículos <i class="bi bi-lock-fill" style="color: white"></i></a></li>
             <li><a class="dropdown-item" href="{{ url_for('pais.cadastro_pais') }}">Pais </a></li>
             <li><a class="dropdown-item" href="{{ url_for('alunos.cadastro_alunos') }}">Alunos </a></li>
           </ul>
