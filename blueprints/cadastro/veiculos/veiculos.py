@@ -10,7 +10,7 @@ veiculos_bp = Blueprint('veiculos', __name__)
 @veiculos_bp.route('/cadastro_veiculos', methods=['GET', 'POST'])
 @login_required
 @cadastro_ativo
-@perfis_permitidos(['Admin', 'Motoristas'])
+@perfis_permitidos(['Admin', 'Motorista'])
 def cadastro_veiculos():
     try:
         perfil = current_user.perfilAcesso
