@@ -1,66 +1,21 @@
 
 <div class= "d-flex flex-wrap gap-4 justify-content-center align-items-stretch">
-  <!-- Card do Motorista -->
+  <!-- Card do Cadastro -->
       <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-      <img src="/static/images/motorista.jpg" class="card-img-top" alt="motorista">
-      
-
-  <!-- Conteúdo principal Motorista-->
-  <div class="flex-grow-1 d-flex flex-column justify-content-between">
-    <div>
-      <h5 class="card-title mt-3"> Cadastro de Motorista</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar motoristas, bem como a atualização e exclusão cadastros existentes.</p>
-    </div>
-
-    <!-- Botões -->
-    <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="#" class="btn btn-primary btn-bloqueio"> <i class="bi bi-lock-fill" style="color: white"></i> Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <i class="bi bi-question-circle"
-           data-bs-toggle="tooltip"
-           data-bs-placement="top"
-           data-bs-title="Abrir informações"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
- <!-- Modal Info -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Nesta seção será cadastrado os motoristas parceiros da instituição para que possamos organizar as rotas e as regiões que irão atuar.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Card do Veículo -->
-
-      <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-      <img src="/static/images/veiculos.jpeg" class="card-img-top" alt="veiculos">
+      <img src="/static/images/cadastros.jpg" class="card-img-top" alt="motorista">
       
 
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Cadastro de Veículos</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar os veículos com as respectivas vagas disponíveis, bem como a atualização e exclusão cadastros existentes.</p>
+      <h5 class="card-title mt-3">Cadastros</h5>
+      <p class="card-text mb-3">Seção para realização dos cadastros de Motoristas, Alunos, Pais e Veículos e a edição.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('veiculos.cadastro_veiculos') }}" class="btn btn-primary btn-bloqueio"><i class="bi bi-lock-fill" style="color: white"></i> Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <a href="{{ url_for('home.cadastros') }}"  class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalCadastros">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -71,140 +26,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Nesta seção será cadastrado os veículos para o transporte dos alunos para a instituição, assim gerenciaremos as vagas disponíveis em cada veículo.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <!-- Card dos Pais -->
-        
-    <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-      <img src="/static/images/pais.jpg" class="card-img-top" alt="pais">
-
-  
-
-  <!-- Conteúdo principal -->
-  <div class="flex-grow-1 d-flex flex-column justify-content-between">
-    <div>
-      <h5 class="card-title mt-3">Cadastro de Pais</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar Pais, bem como a atualização e exclusão cadastros existentes.</p>
-    </div>
-
-    <!-- Botões -->
-    <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('pais.cadastro_pais') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <i class="bi bi-question-circle"
-           data-bs-toggle="tooltip"
-           data-bs-placement="top"
-           data-bs-title="Abrir informações"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        O cadastro dos pais visa organizar as informações de contato e os endereços para a busca dos filhos a instituição.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-             <!-- Card do Aluno -->
-
-
-            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem; ">
-              <img src="/static/images/alunos.jpg" class="card-img-top" alt="alunos">
-
-  <!-- Conteúdo principal -->
-  <div class="flex-grow-1 d-flex flex-column justify-content-between">
-    <div>
-      <h5 class="card-title mt-3">Cadastro de Aluno</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar Aluno, bem como a atualização e exclusão cadastros existentes.</p>
-    </div>
-
-    <!-- Botões -->
-    <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('alunos.cadastro_alunos') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <i class="bi bi-question-circle"
-           data-bs-toggle="tooltip"
-           data-bs-placement="top"
-           data-bs-title="Abrir informações"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Aqui nos cadastramos os nomes dos alunos para que gerenciemos as listas dos alunos nas regiões para a criação das rotas.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
- <!-- Card Gerenciador de Rota -->
-
-
-            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-              <img src="/static/images/gerenciar_rota.jpg" class="card-img-top" alt="Gerenciar rotas">
-  
-
-  <!-- Conteúdo principal -->
-  <div class="flex-grow-1 d-flex flex-column justify-content-between">
-    <div>
-      <h5 class="card-title mt-3">Gerenciador de Rota</h5>
-      <p class="card-text mb-3">Seção dedicada a gerenciar e organizar as rotas de transposrte dos alunos.</p>
-    </div>
-
-    <!-- Botões -->
-    <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="#" class="btn btn-primary btn-bloqueio"><i class="bi bi-lock-fill" style="color: white"></i> Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <i class="bi bi-question-circle"
-           data-bs-toggle="tooltip"
-           data-bs-placement="top"
-           data-bs-title="Abrir informações"></i>
-      </button>
-    </div>
-  </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modalCadastros" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -215,29 +37,31 @@
         Nesta seção será cadastrado os motoristas parceiros da instituição para que possamos organizar as rotas e as regiões que irão atuar.
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
       </div>
     </div>
   </div>
-</div>
- <!-- Card Exibição de Rota -->
+  </div>
 
 
-          <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-              <img src="/static/images/exibir_rota.jpg" class="card-img-top" alt="Exibir Rotas">
+ <!-- Card Rota -->
 
+
+            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+              <img src="/static/images//rotas.jpg" class="card-img-top" alt="Gerenciar rotas">
+  
 
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Exibição  de Rota</h5>
-      <p class="card-text mb-3">Seção dedicada para exibir as rotas de transposrte dos alunos.</p>
+      <h5 class="card-title mt-3">Rotas</h5>
+      <p class="card-text mb-3">Seção dedicada a gerenciar e organizar as rotas de transposrte dos alunos.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="#" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <a href="{{ url_for('home.rotas') }}" class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalRotas">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -245,10 +69,9 @@
       </button>
     </div>
   </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="modalRotas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -256,45 +79,44 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Exibição das rotas é realizada por região. Haverá a função de envio de rotas por mensagem.
+        Nesta seção gerenciaremos as rotas dos transportes dos alunos.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
-</div>
+  </div>
 
- <!-- Card Ponto digital -->
+  <!-- Card RH -->
 
 
-    <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-      <img src="/static/images/ponto_digital.jpg" class="card-img-top" alt="Ponto Digital">
+          <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+              <img src="/static/images/recursoshumanos.jpg" class="card-img-top" alt="Exibir Rotas">
 
-    <!-- Conteúdo principal -->
+
+  <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Ponto digital</h5>
-      <p class="card-text mb-3">Seção dedicada para assinar o ponto digital dos funcionários.</p>
+      <h5 class="card-title mt-3">Recursos Humanos</h5>
+      <p class="card-text mb-3">Seção dedicada aos colaboradores da instituição. Aqui estão os serviços de ponto digital e demais atribuições relacionadas aos trabalhadores.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('pontodigital') }}" class="btn btn-primary btn-bloqueio"><i class="bi bi-lock-fill" style="color: white"></i> Ir para página</a>
-        
-        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          <i class="bi bi-question-circle"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-bs-title="Abrir informações"></i>
-        </button>
-
-      </div>
+      <a href="{{ url_for('home.recursoshumanos') }}" class="btn btn-primary btn-bloqueio"> <i class="bi bi-lock-fill" style="color: white"></i> Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalRH">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
   </div>
-</div>
+  </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="modalRH" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -302,13 +124,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Visando ampliar o escopo da aplicação, os funcionários poderão realizar o ponto de trabalho de forma digital.
+        Gerenciamento do ponto digital e demais serviços do Recursos Humanos.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
-</div>
+  </div>
+
 
 </div>

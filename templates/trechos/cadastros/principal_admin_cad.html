@@ -1,0 +1,223 @@
+
+<div class= "d-flex flex-wrap gap-4 justify-content-center align-items-stretch">
+  <!-- Card do Motorista -->
+      <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+      <img src="/static/images/motorista.jpg" class="card-img-top" alt="motorista">
+      
+
+  <!-- Conteúdo principal -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title mt-3">Cadastro de Motorista</h5>
+      <p class="card-text mb-3">Seção dedicada a cadastrar motoristas, bem como a atualização e exclusão cadastros existentes.</p>
+    </div>
+
+    <!-- Botões -->
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('motoristas.cadastro_motoristas') }}"  class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Nesta seção será cadastrado os motoristas parceiros da instituição para que possamos organizar as rotas e as regiões que irão atuar.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+ <!-- Card do Veículo -->
+
+      <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+      <img src="/static/images/veiculos.jpeg" class="card-img-top" alt="veiculos">
+      
+
+  <!-- Conteúdo principal -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title mt-3">Cadastro de Veículos</h5>
+      <p class="card-text mb-3">Seção dedicada a cadastrar os veículos com as respectivas vagas disponíveis, bem como a atualização e exclusão cadastros existentes.</p>
+    </div>
+
+    <!-- Botões -->
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('veiculos.cadastro_veiculos') }}"  class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Nesta seção será cadastrado os veículos para o transporte dos alunos para a instituição, assim gerenciaremos as vagas disponíveis em cada veículo.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Card dos Pais -->
+        
+    <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+      <img src="/static/images/pais.jpg" class="card-img-top" alt="pais">
+
+  
+
+  <!-- Conteúdo principal -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title mt-3">Cadastro de Pais</h5>
+      <p class="card-text mb-3">Seção dedicada a cadastrar Pais, bem como a atualização e exclusão cadastros existentes.</p>
+    </div>
+
+    <!-- Botões -->
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('pais.cadastro_pais') }}" class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        O cadastro dos pais visa organizar as informações de contato e os endereços para a busca dos filhos a instituição.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+             <!-- Card do Aluno -->
+
+
+            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem; ">
+              <img src="/static/images/alunos.jpg" class="card-img-top" alt="alunos">
+
+  <!-- Conteúdo principal -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title mt-3">Cadastro de Aluno</h5>
+      <p class="card-text mb-3">Seção dedicada a cadastrar Aluno, bem como a atualização e exclusão cadastros existentes.</p>
+    </div>
+
+    <!-- Botões -->
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('alunos.cadastro_alunos') }}" class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Aqui nos cadastramos os nomes dos alunos para que gerenciemos as listas dos alunos nas regiões para a criação das rotas.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+ <!-- Card Edição cadastros -->
+
+
+            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
+              <img src="/static/images/edicao.jpg" class="card-img-top" alt="Gerenciar rotas">
+  
+
+  <!-- Conteúdo principal -->
+  <div class="flex-grow-1 d-flex flex-column justify-content-between">
+    <div>
+      <h5 class="card-title mt-3">Edição dos cadastros</h5>
+      <p class="card-text mb-3">Seção dedicada para editar, alterar ou apagar cadastros.</p>
+    </div>
+
+    <!-- Botões -->
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <a href="#" class="btn btn-primary">Ir para página</a>
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-question-circle"
+           data-bs-toggle="tooltip"
+           data-bs-placement="top"
+           data-bs-title="Abrir informações"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Nesta seção estarão contidos as opções de edição, alteração e deleção dos cadastros.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

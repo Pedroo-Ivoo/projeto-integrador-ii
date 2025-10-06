@@ -29,7 +29,7 @@
       {% if perfil == 'Admin' %}
         {% include 'trechos/headers/hearder_admin.html' %}
       {% elif perfil == 'Motorista' %}
-        {% include 'trechos/headers/header_motorisas.html' %}
+        {% include 'trechos/headers/header_motoristas.html' %}
       {% elif perfil == 'Pais' %}
         {% include 'trechos/headers/header_pais.html' %}
       {% endif %}
@@ -41,9 +41,9 @@
         <div id="msg-error"></div>
         <div class="centraliza">
          {% if perfil == 'Admin' %}
-            {% include 'trechos/cad_pais/info_admin.html' %}
+            {% include 'trechos/cadastros/cad_pais/info_admin.html' %}
          {% elif perfil == 'Pais' %}
-            {% include 'trechos/cad_pais/info_pais.html' %}
+            {% include 'trechos/cadastros/cad_pais/info_pais.html' %}
          {% endif %}
         </div>
 
