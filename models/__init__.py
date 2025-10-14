@@ -8,3 +8,5 @@ from .pais import Pais
 from .motoristas import Motoristas
 from .alunos import Alunos
 from .veiculos import Veiculos
+from .alocacao_viagens import AlocacaoViagens
+from .alocacaoAlunos import AlocacaoAlunos

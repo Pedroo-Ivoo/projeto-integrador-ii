@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criação de Rotas</title>
+    <!-- Link importando o bootstrap para o html -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://getbootstrap.com/docs/5.3/assets/css/docs.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="/static/estilo.css">
+
+</head>
+
+<body>
+    <header class="navbar bg-primary" data-bs-theme="dark" class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
+    </a> 
+      {% if perfil == 'Admin' %}
+        {% include 'trechos/headers/hearder_admin.html' %}
+      {% elif perfil == 'Motorista' %}
+        {% include 'trechos/headers/header_motoristas.html' %}
+      {% elif perfil == 'Pais' %}
+        {% include 'trechos/headers/header_pais.html' %}
+      {% endif %}
+    </header>
+    <main>
+        <h1 class="d-flex justify-content-center mb-4">Criação de Rotas</h1>
+        <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
+        <div id="msg-feedback" class="box_aviso container-md"></div>
+        <div id="msg-error" class="box_aviso container-md"></div>
+        <div class="centraliza">
+         {% if perfil == 'Admin' %}
+            {% include 'trechos/cadastros/cad_veiculos/info_admin.html' %}
+         {% elif perfil == 'Motorista' %}
+            {% include 'trechos/cadastros/cad_motorista/info_motoristas.html' %}
+         {% endif %}
+        </div>
+        
+
+        <div class="container-md box-form" style="width: 80%;">
+            <form id="form" method="POST" action="/gerenciamento_rotas" >
+                <div class="row g-3">
+                    <div class="col-md mb-3">
+                    <label for="Motorista">Motorista e transporte</label>
+                    <select class="form-control" name="motorista" id="motorista" required>
+                        
+                        {% if perfil != "Motorista" %}
+                            
+                            <option value="">Selecione</option>
+                            
+                            {% if motoristas|length == 0 %}
+                                <option value="" disabled>Nenhum motorista disponível</option>
+                            {% endif %}
+                            
+                            {% for alocacao in motoristas %}
+                                <option value="{{ alocacao.id }}">{{ alocacao.motorista_obj.nome }} {{ alocacao.motorista_obj.sobrenome }} -  {{ alocacao.veiculos_obj.tipo }} -  Vagas disponíveis: {{ vagas_por_alocacao[alocacao.id] }}</option>
+                            {% endfor %}
+                            
+                        {% else %}
+                            
+                            {% if motoristas %} 
+                                 {% set alocacao = motoristas[0] %}
+
+                                <option value="{{ alocacao.id }}" selected>{{ alocacao.motorista_obj.nome }} {{ alocacao.motorista_obj.sobrenome }} -  {{ alocacao.veiculos_obj.tipo }} -  Vagas disponíveis: {{ vagas_por_alocacao[alocacao.id] }}</option>
+                                
+                            {% else %}
+                                <option value="" disabled selected>Você está em outra alocação</option>
+                            {% endif %}
+
+                        {% endif %}
+                        
+                    </select>
+                </div>
+               
+                    
+                    <div class="row ">
+
+                        <div class="col-md mb-3">
+                        <label for="Motorista">Alunos disponíveis</label>
+                        {% if alunos|length == 0 %}
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="checkalunos" disabled>
+                            <label class="form-check-label" for="checkDefault">
+                                Sem alunos disponíveis
+                            </label>
+                                {% endif %}
+                                {% for aluno in alunos %}
+                        <div class="form-check"> 
+                        <input class="form-check-input" type="checkbox" value="{{ aluno.id }}" name="alunos">
+
+                        <label class="form-check-label" for="checkDefault">
+                                {{ aluno.nome }} {{aluno.sobrenome}}. Responsável: {{aluno.pais_obj.nome}} Rua: {{ aluno.pais_obj.rua }} Nº: {{aluno.pais_obj.numero}} Bairro: {{aluno.pais_obj.bairro}} CEP: {{aluno.pais_obj.cep}}
+                            </label>
+                        </div>
+                        {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                
+                    <div class="row g-3">
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
+                            <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
+                            <a href="{{ url_for('home.rotas') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </main>
+    <footer class="bg-dark text-white text-center py-3 mt-3">
+      Desenvolvido em grupo pelos alunos do grupo DRP07-PJI240 do Eixo de
+      Computação da UNIVESP
+    </footer>
+
+    <!-- Jquery para o api do CEP, alteração do icone de mostrar e ocultar a senha e a máscara do cep. -->
+     <!-- Importante lembrar que para o funcionamento correto a ordem importa. -->
+
+
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- <script src="/static/script.js"></script> -->
+
+    
+    
+    <script src="/static/funcoes_relacao_rota.js"></script>
+</body>
+
+</html>

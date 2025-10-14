@@ -17,20 +17,15 @@ def cadastro_veiculos():
         nome_usuario = current_user.nome
         
         if request.method == "GET":
-            lista_motoristas = Motoristas.query.all()
-            if len(lista_motoristas) >0:
-                return render_template('cadastro_veiculos.html', perfil=perfil, nome_usuario=nome_usuario, lista_motoristas=lista_motoristas)
-            else:
-                return render_template('cadastro_veiculos.html', perfil=perfil, nome_usuario=nome_usuario)
+            return render_template('cadastro_veiculos.html', perfil=perfil, nome_usuario=nome_usuario)
                 
-        elif request.method == "POST":
+        if request.method == "POST":
             data = request.get_json()
             placa = data.get('placa', "").strip().upper()
             modelo = data.get('modelo', "").strip().title()           
             ano_fabricacao = data.get('ano_fabricacao', "").strip()         
             tipo = data.get('tipo', "").strip().title()
             vagas = data.get('vagas', "").strip()
-            id_motorista = data.get('motorista', "").strip()
         
             
             
@@ -59,9 +54,7 @@ def cadastro_veiculos():
            #Verifica se o campo vagas foi preenchido
             if not vagas:
                 erros.append("O campo 'Vagas' é obrigatório")
-           #Verifica se o campo vagas foi preenchido
-            if not id_motorista:
-                erros.append("O campo 'Motorista' é obrigatório")
+          
                
             
             #Verifica se todos os campos foram preenchidos. Se não forem não realiza o cadastro e retorna uma informação ao usuário.
@@ -74,16 +67,14 @@ def cadastro_veiculos():
             #Busca do Banco de dados se há um aluno com o mesmo nome
             cadastro_existente = Veiculos.query.filter_by(placa=placa).first() #realiza a consulta no banco.
             
-            motorista_cadastrado = Veiculos.query.filter_by(id_motorista =id_motorista).first() #realiza a consulta no banco.
             
             #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
             if cadastro_existente:
                 return jsonify({"erros": ["Veículo já cadastrado."]}), 409
-            elif motorista_cadastrado:
-                return jsonify({"erros": ["Motorista já vinculado a um veículo."]}), 409
+           
             #Caso não haja cadastro existente, realiza o cadastro
             else:
-                novo_veiculo = Veiculos(placa=placa, modelo=modelo, ano_fabricacao=ano_fabricacao,tipo=tipo, vagas=vagas, id_motorista=id_motorista)
+                novo_veiculo = Veiculos(placa=placa, modelo=modelo, ano_fabricacao=ano_fabricacao,tipo=tipo, vagas=vagas)
                 
                 db.session.add(novo_veiculo)
                 db.session.commit()

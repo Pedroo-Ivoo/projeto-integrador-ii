@@ -1,56 +1,46 @@
 $(document).ready(function() {
-    function mascaraDoTelefone(){
-        $('#telefone').inputmask('(99) 99999-9999');
-    }
-    mascaraDoTelefone();
-
+   
     // Função que retorna o erro ao usuário
     function msgErro(mensagem){
         $("#msg-error").html('<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-triangle"></i>' + mensagem + '</div>'); 
     }
 
+   
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
                 console.log("Função de submit acionada!");
                 event.preventDefault();
+            
+                // Verifica se o tipo foi selecionado
+                if($('#motorista').val() == ""){
+                    msgErro('Favor selecione o transporte');
+                    return false;
+                }
+                // Verifica se a vaga foi selecionado
+                if ($('input[name="alunos"]:checked').length === 0) {
+                    msgErro('É preciso selecionar ao menos um aluno.');
+                    return false;
+                }
                 
-                // Verifica se a nome foi digitada
-                if($('#nome').val().length == 0){
-                    msgErro('Favor preencher o campo nome');
-                    return false;
-                }
-                // Verifica se a sobrenome foi digitada
-                if($('#sobrenome').val().length == 0){
-                    msgErro('Favor preencher o campo sobrenome');
-                    return false;
-                }
-                // Verifica se a email foi digitada
-                if($('#email').val().length == 0){
-                    msgErro('Favor preencher o campo email');
-                    return false;
-                }
-                // Verifica se a telefone foi digitada
-                if($('#telefone').val().length == 0){
-                    msgErro('Favor preencher o campo telefone');
-                    return false;
-                }
                 
 
                 //Validar os dados do input
-                const nome = $('#nome').val().trim();
-                const sobrenome = $('#sobrenome').val().trim();
-                const email = $('#email').val().trim();
-                const telefone = $('#telefone').val().trim().replace(/\D/g, '');
+                
+                const motorista = $('#motorista').val();
+                const alunos = $('input[name="alunos"]:checked').map(function() {
+                return this.value;}).get();
 
+
+                //Criar um objeto com os dados do formulário
                 const data = {
-                    nome: nome,
-                    sobrenome: sobrenome,
-                    email: email,
-                    telefone: telefone,
+                    motorista: motorista,
+                    alunos: alunos,
                 };
+                console.log(data)
+                
                 // Envia os dados para o servidor usando fetch API
-                fetch('/cadastro_motoristas', {
+                fetch('/relacao_rotas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -83,6 +73,9 @@ $(document).ready(function() {
                         `<div class="alert alert-danger">Erro de conexão: ${error}</div>`;
                 });
 
-            
+    
+               
     })
+
+   
 })

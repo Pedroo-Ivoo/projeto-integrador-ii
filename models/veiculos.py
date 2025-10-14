@@ -10,9 +10,4 @@ class Veiculos(db.Model):
     vagas = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), default='Ativo')            
     data_registro = db.Column(db.DateTime, default=db.func.now()) 
-    
-    # Chave estrangeira
-    id_motorista = db.Column(db.Integer, db.ForeignKey('motoristas.id'), nullable=False)
-    
-    #Estabelecendo relacionamento entre as tabelas
-    regiao_obj = db.relationship('Motoristas', backref='veiculos')
+    status=db.Column(db.String(50), default='Ativo')

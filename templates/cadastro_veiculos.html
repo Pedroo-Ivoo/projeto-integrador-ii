@@ -37,8 +37,8 @@
     <main>
         <h1 class="d-flex justify-content-center mb-4">Cadastro de Veículos</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
-        <div id="msg-feedback box_aviso container-md"></div>
-        <div id="msg-error box_aviso container-md"></div>
+        <div id="msg-feedback" class="box_aviso container-md"></div>
+        <div id="msg-error" class="box_aviso container-md"></div>
         <div class="centraliza">
          {% if perfil == 'Admin' %}
             {% include 'trechos/cadastros/cad_veiculos/info_admin.html' %}
@@ -46,9 +46,7 @@
             {% include 'trechos/cadastros/cad_motorista/info_motoristas.html' %}
          {% endif %}
         </div>
-        {% if not lista_motoristas %}
-<div class="alert alert-danger box_aviso container-md">Não é possível enviar o formulário sem um motorista cadastrado.</div>
-{% endif %}
+        
 
         <div class="container-md box-form" style="width: 80%;">
             <form id="form" method="POST" action="/cadastro_veiculos" >
@@ -87,25 +85,7 @@
                         </select>
                         
                     </div>
-                    <div class="col-md mb-3">
-                      {%  if not lista_motoristas %}
-                      <label for="motorista">Motorista (*)</label>
-                      <!-- <select class="form-control" name="motorista" id="motorista" required> -->
-                        <select class="form-control" name="motorista" id="motorista" required {% if not lista_motoristas %}disabled{% endif %}>
-                          <!-- <option value=" " selected>É preciso ter motorista cadastrado!</option> -->
-                          {% else %}
-                          <label for="motorista">Motorista (*)</label>
-                          <select class="form-control" name="motorista" id="motorista" required >
-                          <label for="motorista">Motorista (*)</label>
-                            <option value="" selected disabled>Selecione o Responsável</option>
-                                {% for moto in lista_motoristas %}
-                                    <option value="{{ moto.id }}">{{ moto.nome }} {{ moto.sobrenome }}</option>
-                                {% endfor %}
-                            {% endif %}
-                        
-                      </select>
-                        
-                    </div>
+                    
                 </div>
                     <div class="row g-3">
                         <div class="col-auto">

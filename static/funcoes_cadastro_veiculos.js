@@ -66,11 +66,7 @@ mascaraPlaca();
                     msgErro('Favor selecione o número de vagas');
                     return false;
                 }
-                // Verifica se o motorista foi selecionado
-                if($('#motorista').val().trim()==""){
-                    msgErro('Motorista não informado');
-                    return false;
-                }
+                
                 
 
                 //Validar os dados do input
@@ -79,7 +75,6 @@ mascaraPlaca();
                 const ano_fabricacao = $('#ano_fabricacao').val().trim();
                 const tipo = $('#tipo').val().trim();
                 const vagas = $('#vagas').val().trim();
-                const motorista = ($('#motorista').val().trim())
 
 
                 //Criar um objeto com os dados do formulário
@@ -89,7 +84,6 @@ mascaraPlaca();
                     ano_fabricacao: ano_fabricacao, 
                     tipo: tipo,
                     vagas: vagas,
-                    motorista: motorista
                 };
                 console.log(data)
                 // Envia os dados para o servidor usando fetch API

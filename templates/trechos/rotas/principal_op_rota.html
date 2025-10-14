@@ -4,19 +4,19 @@
 
 
         <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-        <img src="/static/images/gerenciar_rota.jpg" class="card-img-top" alt="Gerenciar rotas">
+        <img src="/static/images/motoristatransporte.jpg" class="card-img-top" alt="Gerenciar rotas">
   
 
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Gerenciador de Rota</h5>
-      <p class="card-text mb-3">Seção dedicada a gerenciar e organizar as rotas de transposrte dos alunos.</p>
+      <h5 class="card-title mt-3">Vinculação do Motorista - Transporte</h5>
+      <p class="card-text mb-3">Nesta página iremos associar o motorista ao transporte que irá realizar</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('home.op_rota') }}" class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('rotas.gerenciamento_rotas') }}" class="btn btn-primary">Ir para página</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalRota">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
@@ -47,19 +47,19 @@
 
 
         <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-        <img src="/static/images/exibir_rota.jpg" class="card-img-top" alt="Exibir Rotas">
+        <img src="/static/images/transporteescolar.jpg" class="card-img-top" alt="Exibir Rotas">
 
 
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Exibição  de Rota</h5>
-      <p class="card-text mb-3">Seção dedicada para exibir as rotas de transposrte dos alunos.</p>
+      <h5 class="card-title mt-3">Criação das rotas</h5>
+      <p class="card-text mb-3">Nesta página será feita a relação de alunos com os respectivos transpote.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="#" class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('rotas.relacao_rotas') }}" class="btn btn-primary">Ir para página</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalExibirRota">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"

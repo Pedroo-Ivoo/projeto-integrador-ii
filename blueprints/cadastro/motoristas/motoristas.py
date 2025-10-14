@@ -31,7 +31,6 @@ def cadastro_motoristas():
             sobrenome_recebido = data.get('sobrenome', "").strip()
             email = data.get('email', "").strip().lower()
             telefone = data.get('telefone', "").strip()
-            regiao = data.get('regiao').title()
 
             
             nome = formatar_nome(nome_recebido)
@@ -77,9 +76,8 @@ def cadastro_motoristas():
                 return jsonify({"erros": ["Motorista já cadastrado."]}), 409
             #Caso não haja cadastro existente, realiza o cadastro
             else:
-                regiao_obj = Regioes.query.filter_by(regiao=regiao).first()
                 usuario_obj = Usuarios.query.get(current_user.id)
-                novo_motorista = Motoristas(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
+                novo_motorista = Motoristas(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, usuario_obj =usuario_obj)
                 
                 db.session.add(novo_motorista)
                 db.session.commit()

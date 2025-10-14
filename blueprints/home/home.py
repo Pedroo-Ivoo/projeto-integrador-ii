@@ -40,3 +40,12 @@ def recursoshumanos():
     perfil = current_user.perfilAcesso
     nome_usuario = current_user.nome
     return render_template("recursoshumanos.html", nome_usuario=nome_usuario, perfil=perfil)
+
+@home_bp.route('/op_rota')
+@login_required
+@cadastro_ativo
+@perfis_permitidos(['Admin', 'Motorista'])
+def op_rota():
+    perfil = current_user.perfilAcesso
+    nome_usuario = current_user.nome
+    return render_template('op_rota.html', perfil=perfil, nome_usuario=nome_usuario)
