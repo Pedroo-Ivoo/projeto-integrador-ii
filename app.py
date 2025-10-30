@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import os
+import googlemaps
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user 
 from datetime import timedelta
@@ -8,9 +9,9 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer 
 
 
 from models import Usuarios
-from config import db # Importa o inicializador do banco de dados
+from config import API_KEY, db # Importa o inicializador do banco de dados
 
-from blueprints import usuarios_bp, home_bp, motoritas_bp, pais_bp, alunos_bp, veiculos_bp, rotas_bp # Importa o blueprint de usuários
+from blueprints import usuarios_bp, home_bp, motoritas_bp, pais_bp, alunos_bp, veiculos_bp, rotas_bp, exiberotas_bp, pontodigital_bp # Importa o blueprint de usuários
 from utils import cadastro_ativo, perfis_permitidos # Importa o decorador cadastro_ativo
 load_dotenv()
 
@@ -28,15 +29,18 @@ logMan.login_message_category = "warning"
 # Após esse tempo, o usuário será deslogado automaticamente e precisará fazer login novamente.
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 
+
+
+
 CHAVE_SECRETA = os.getenv("CHAVESEGURA")
 app.secret_key = CHAVE_SECRETA
 s = Serializer(CHAVE_SECRETA)
 
 #Banco de dados local para testes
-# POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
+POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
 
 #Banco de dados hospedado no aiven
-POSTGRES_URI = os.getenv("DATABASE_URL")
+# POSTGRES_URI = os.getenv("DATABASE_URL")
 # Verificações básicas para garantir que as variáveis do DB foram carregadas
 if not POSTGRES_URI:
     raise ValueError("DATABASE_URL não definida! Verifique o arquivo .env ou variáveis de ambiente")
@@ -52,6 +56,8 @@ app.register_blueprint(pais_bp)
 app.register_blueprint(alunos_bp)
 app.register_blueprint(veiculos_bp)
 app.register_blueprint(rotas_bp)
+app.register_blueprint(exiberotas_bp)
+app.register_blueprint(pontodigital_bp)
 
 
 
@@ -77,12 +83,12 @@ def index():
 
     
 
-@app.route("/pontodigital")
-@login_required
-@cadastro_ativo
-@perfis_permitidos(["Motorista", "Admin"])
-def pontodigital():
-    return render_template("pontodigital.html")
+# @app.route("/pontodigital")
+# @login_required
+# @cadastro_ativo
+# @perfis_permitidos(["Motorista", "Admin"])
+# def pontodigital():
+#     return render_template("pontodigital.html")
 
 
 if __name__ == "__main__":

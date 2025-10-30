@@ -8,5 +8,5 @@ class Alunos(db.Model):
     
     id_pais = db.Column(db.Integer, db.ForeignKey('pais.id'), nullable=False)
     #Estabelecendo relacionamento entre as tabelas
-    pais_obj = db.relationship('Pais', backref='alunos')
+    pais = db.relationship('Pais', backref='alunos')
      

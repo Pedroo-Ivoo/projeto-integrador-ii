@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 from flask_login import login_required, current_user
 from config import db
 from models import Pais, Regioes, Usuarios
-from utils import cadastro_ativo, perfis_permitidos, formatar_nome, verifica_email
+from utils import cadastro_ativo, perfis_permitidos, formatar_nome, verifica_email, geocodificar_endereco
 
 pais_bp = Blueprint('pais', __name__)
 
@@ -100,6 +100,23 @@ def cadastro_pais():
                 return jsonify({"erros": erros}), 400
 
             #-------------------------------------------------------------------------------------------------------#
+            
+            ## -------------------------- NOVO PASSO: GEOCODIFICAÇÃO ----------------------------- ##
+            
+            # 1. Monta o endereço o mais completo possível
+            # Ajuste esta string para refletir os campos que você tem no seu formulário/DB
+            endereco_para_api = f"{rua} {numero}, {bairro}, {cep}, Brasil" # Adicione cidade/estado se disponíveis
+            
+            # 2. Chama a função de geocodificação (assumindo que você a importou)
+            latitude, longitude = geocodificar_endereco(endereco_para_api)
+            
+            # 3. Valida se a geocodificação foi bem-sucedida
+            if latitude is None or longitude is None:
+                erros.append("Não foi possível localizar o endereço no mapa. Verifique se o endereço (Rua, Número, CEP) está correto.")
+                return jsonify({"erros": erros}), 400
+
+            ## -------------------------- FIM: GEOCODIFICAÇÃO ----------------------------- ##
+            
             #-------------------------------------Segundo nivel de verificação--------------------------------------#
             #Busca do Banco de dados se há usuario com o mesmo nome
             cadastro_existente = Pais.query.filter_by(nome=nome, sobrenome=sobrenome).first() #realiza a consulta no banco.
@@ -111,7 +128,7 @@ def cadastro_pais():
             else:
                 regiao_obj = Regioes.query.filter_by(regiao=regiao).first()
                 usuario_obj = Usuarios.query.get(current_user.id)
-                novo_pai = Pais(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, cep=cep, rua=rua, numero=numero, complemento=complemento,bairro=bairro, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
+                novo_pai = Pais(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, cep=cep, rua=rua, numero=numero, complemento=complemento,bairro=bairro,latitude=latitude,longitude=longitude, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
                 
                 db.session.add(novo_pai)
                 db.session.commit()

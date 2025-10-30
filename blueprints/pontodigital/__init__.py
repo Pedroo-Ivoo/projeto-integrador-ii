@@ -1,0 +1,1 @@
+from .ponto import pontodigital_bp

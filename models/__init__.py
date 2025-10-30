@@ -10,3 +10,5 @@ from .alunos import Alunos
 from .veiculos import Veiculos
 from .alocacao_viagens import AlocacaoViagens
 from .alocacaoAlunos import AlocacaoAlunos
+from .funcionarios import Funcionario
+from .registros import RegistroPonto

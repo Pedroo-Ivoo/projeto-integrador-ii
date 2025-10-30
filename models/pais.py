@@ -13,6 +13,8 @@ class Pais(db.Model):
     complemento = db.Column(db.String(100), nullable=True)
     bairro = db.Column(db.String(100), nullable=False)
     regiao = db.Column(db.String(50), nullable=False)
+    latitude = db.Column(db.Float, nullable=True)  
+    longitude = db.Column(db.Float, nullable=True)
     
     id_regiao = db.Column(db.Integer, db.ForeignKey('regioes.id'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)

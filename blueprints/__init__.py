@@ -10,3 +10,5 @@ from blueprints.cadastro.pais import pais_bp
 from blueprints.cadastro.alunos import alunos_bp
 from blueprints.cadastro.veiculos import veiculos_bp
 from blueprints.rotas.gerenciamentorotas import rotas_bp
+from blueprints.rotas.exibicaorotas import exiberotas_bp
+from blueprints.pontodigital.ponto import pontodigital_bp

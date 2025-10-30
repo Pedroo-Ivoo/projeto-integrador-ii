@@ -5,3 +5,4 @@ from .email_utils import enviar_email, verifica_email
 from .token_utils import gerador_token, enviar_confirmacao, gerador_serializer
 from .formarta_nome_utils import formatar_nome
 from .decoradores import cadastro_ativo, perfis_permitidos
+from .conversor_lat import geocodificar_endereco
