@@ -61,6 +61,7 @@ app.register_blueprint(pontodigital_bp)
 
 
 
+
 #-----------------------------------------Funções--------------------------------------------------------#
 #Metodo necessário para acessar o site sem o login realizado.
 @logMan.user_loader #quando estamos logado o que fica guardado é o id
