@@ -84,7 +84,7 @@ if (typeof $ !== 'undefined'){
             // Função chamada quando estiver preenchendo o campo do usuário.
             $("#usuario").on("input",function(){
             const usuario = $(this).val();
-            const regex =/^[a-zA-Z]{3,12}$/;
+            const regex =/^[a-zA-Z]{3,25}$/;
 
             if (usuario === "") {
             $(this).removeClass('is-valid is-invalid');

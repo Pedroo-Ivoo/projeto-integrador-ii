@@ -15,7 +15,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('motoristas.cadastro_motoristas') }}"  class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#motoristaModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -26,7 +26,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="motoristaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -59,7 +59,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('veiculos.cadastro_veiculos') }}"  class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#veiculoModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -70,7 +70,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="veiculoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -104,7 +104,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('pais.cadastro_pais') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#paisModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -115,7 +115,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="paisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -148,7 +148,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('alunos.cadastro_alunos') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#alunosModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -159,7 +159,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="alunosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -193,7 +193,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('home.editar_cadastros') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#editarModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -203,7 +203,7 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -211,7 +211,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Nesta seção estarão contidos as opções de edição, alteração e deleção dos cadastros.
+        Nesta seção estarão contidos as opções de edição, alteração e exclusão dos cadastros.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

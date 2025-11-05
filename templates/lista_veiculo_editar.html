@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4">
     <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -41,8 +41,8 @@
         <div id="msg-error"></div>
         <div class="centraliza">
          <div class="info_cadastro">
-            Olá Administrador! Escolha o veículo na lista abaixo para editar o cadastro ou se desejar deletar o cadastro clique em delete. <br> 
-                Lembre-se que para deletar um veículo é preciso ter retirado todas as rotas vinculadas a ele. Ao deletar o cadastro será irreversível. 
+            Escolha o motorista na lista abaixo para editar o cadastro; Apenas o administrador pode deletar o cadastro. <br> 
+                Lembre-se que para deletar um motoristas é preciso ter retirado todas as rotas vinculadas a ele, bem como o veículo a ele associado. Ao deletar o cadastro será irreversível. 
                 <br>
                 Obrigado!
             </div>

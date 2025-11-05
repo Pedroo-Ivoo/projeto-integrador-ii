@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4">
     <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -41,7 +41,7 @@
         <div id="msg-error"></div>
         <div class="centraliza">
          <div class="info_cadastro">
-            Olá Administrador! Escolha o cadastro dos alunos na lista abaixo para editar ou se desejar deletar o cadastro clique em delete. <br> 
+            Escolha o cadastro o motorista - veículo associado na lista abaixo para editar. Apenas o administrador pode exluir a relação. <br> 
                 Lembre-se que para deletar o cadastro é preciso ter excluido a vinculação no transporte. Ao deletar o cadastro será irreversível. 
                 <br>
                 Obrigado!
@@ -49,6 +49,8 @@
         </div>      
 
         <div class="container-md box-form" style="width: 80%;">
+                      <h4 class="d-flex justify-content-center">Motoristas e Veículos vinculados (Em uso)</h4>
+
            <table class="table">
             <thead>
               <tr>
@@ -85,7 +87,7 @@
 
 
             {% if perfil != 'Motorista' %}
-            <h2 class="d-flex justify-content-center mb-3 mt-5">Motoristas Livres (Disponíveis)</h2>
+            <h4 class="d-flex justify-content-center mb-3 mt-5">Motoristas Livres (Disponíveis)</h4>
                 {% if motoristas_livres %}
                     <table class="table">
                         <thead>
@@ -110,7 +112,7 @@
                 {% endif %}
             {% endif %}
 
-            <h2 class="d-flex justify-content-center mb-3 mt-5">Veículos Livres (Disponíveis)</h2>
+            <h4 class="d-flex justify-content-center mb-3 mt-5">Veículos Livres (Disponíveis)</h4>
                 {% if veiculos_livres %}
                     <table class="table">
                         <thead>

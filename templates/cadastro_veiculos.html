@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header class="navbar bg-primary" data-bs-theme="dark" class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4">
     <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -91,7 +91,7 @@
                         <div class="col-auto">
                             <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
                             <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
-                            <a href="{{ url_for('home.home') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            <a href="{{ url_for('home.cadastros') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
                         </div>
                     </div>
             </form>

@@ -15,7 +15,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('motoristas.lista_motorista') }}"  class="btn btn-warning">Editar</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#motoristaModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -26,7 +26,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="motoristaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -34,7 +34,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Nesta seção será cadastrado os motoristas parceiros da instituição para que possamos organizar as rotas e as regiões que irão atuar.
+        Nesta seção será possível editar cadastrado os motoristas parceiros da instituição. Também será possível excluir o cadastro.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -59,7 +59,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('veiculos.lista_veiculos') }}"  class="btn btn-warning">Editar</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#veiculoModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -70,7 +70,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="veiculoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -78,7 +78,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Nesta seção será cadastrado os veículos para o transporte dos alunos para a instituição, assim gerenciaremos as vagas disponíveis em cada veículo.
+       Nesta seção será possível editar cadastrado dos veículos da instituição. Também será possível excluir o cadastro.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -104,7 +104,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('pais.lista_pais') }}"  class="btn btn-warning">Editar</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#paisModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -115,7 +115,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="paisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -123,7 +123,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        O cadastro dos pais visa organizar as informações de contato e os endereços para a busca dos filhos a instituição.
+        Nesta seção será possível editar cadastrado do pais ou resposáveis da instituição. Também será possível excluir o cadastro.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -148,7 +148,7 @@
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
       <a href="{{ url_for('alunos.lista_alunos') }}"  class="btn btn-warning">Editar</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#alunosModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -159,7 +159,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="alunosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -167,7 +167,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Aqui nos cadastramos os nomes dos alunos para que gerenciemos as listas dos alunos nas regiões para a criação das rotas.
+        Nesta seção será possível editar cadastrado dos alunos da instituição. Também será possível excluir o cadastro.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

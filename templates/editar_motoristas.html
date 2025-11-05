@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Motorista</title>
+    <title>Alterar Cadastro de Motorista</title>
     <!-- Link importando o bootstrap para o html -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4">
     <a href="{{ url_for('home.home') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -35,16 +35,16 @@
       {% endif %}
     </header>
     <main>
-        <h1 class="d-flex justify-content-center mb-4">Cadastro de Motorista</h1>
+        <h1 class="d-flex justify-content-center mb-4">Alterar Cadastro de Motorista</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
         <div id="msg-feedback"></div>
         <div id="msg-error"></div>
         <div class="centraliza">
-         {% if perfil == 'Admin' %}
-            {% include 'trechos/cadastros/cad_motorista/info_admin.html' %}
-         {% elif perfil == 'Motorista' %}
-            {% include 'trechos/cadastros/cad_motorista/info_motoristas.html' %}
-         {% endif %}
+         <div class="info_cadastro">
+           Atualize os dados do motorista nos campos abaixo; Campos com (*) são obrigatórios. <br> 
+          <br>
+                Obrigado!
+            </div>
         </div>
 
         
@@ -82,7 +82,7 @@
                         <div class="col-auto">
                             <button type="submit" class="btn btn-outline-primary mb-3">Salvar</button>
                             <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
-                            <a href="{{ url_for('home.home') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            <a href="{{ url_for('motoristas.lista_motorista') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
                         </div>
                     </div>
             </form>

@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4">
     <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -40,11 +40,11 @@
         <div id="msg-feedback" class="box_aviso container-md"></div>
         <div id="msg-error" class="box_aviso container-md"></div>
         <div class="centraliza">
-         {% if perfil == 'Admin' %}
-            {% include 'trechos/cadastros/cad_veiculos/info_admin.html' %}
-         {% elif perfil == 'Motorista' %}
-            {% include 'trechos/cadastros/cad_motorista/info_motoristas.html' %}
-         {% endif %}
+         <div class="info_cadastro">
+            Nesta seção é possível reorganizar os alunos já vinculados a rota. Novos alunos devem ser incluidos na Criação de Rotas. A exclusão das rotas só pode ser feita pelo administrador. Ao deletar o cadastro será irreversível. 
+                <br>
+                Obrigado!
+            </div>
         </div>
         
 

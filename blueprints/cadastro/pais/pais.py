@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy.exc import IntegrityError
 from config import db
 from models import Pais, Regioes, Usuarios
 from utils import cadastro_ativo, perfis_permitidos, formatar_nome, verifica_email, geocodificar_endereco
@@ -332,10 +333,28 @@ def excluir_pai(id):
     pai = Pais.query.get(id)
     if not pai:
         return jsonify({"erro": "Pai não encontrado"}), 404
+    try:
+        db.session.delete(pai)
+        db.session.commit()
+        return jsonify({"mensagem": "Veículo excluído com sucesso!"}), 200
+    except IntegrityError as e:
+        # Se houver um erro de integridade (restrição de chave estrangeira, NOT NULL, etc.)
+        db.session.rollback() # MUITO IMPORTANTE: Reverter a transação em caso de erro
 
-    # if motorista.onibus or motorista.viagens or motorista.rotas:
-    #     return jsonify({"erro": "Este motorista está vinculado a outros registros e não pode ser excluído."}), 400
+        # Log do erro para depuração
+        print(f"Erro de Integridade ao excluir {pai}: {e}")
+        
+        # Verifica a origem do erro (opcional, mas bom para mensagens específicas)
+        # O erro 'NotNullViolation' indica que há registros dependentes.
+        # Log do erro para depuração (Mantenha o log para identificar qual tabela causou o erro)
+        print(f"Erro de Integridade ao excluir: {e}") 
+        
+        # Mensagem única e abrangente para todas as violações de integridade (Foreign Key, Not Null, etc.)
+        mensagem_erro = "Não foi possível excluir o Pai/Responsável. Ele está vinculado a um Aluno na 'Cadastro de Alunos' e deve ser desassociado primeiro. Obs. Se o aluno estiver associado a alguma rota é preciso remover essas vinculações antes de excluir o aluno e posteriormente o pai/responsável."
 
-    db.session.delete(pai)
-    db.session.commit()
-    return jsonify({"mensagem": "Pai excluído com sucesso!"}), 200
+        return jsonify({"erro": mensagem_erro}), 409
+
+    except Exception as e:
+        # Tratar outros erros inesperados
+        db.session.rollback()
+        return jsonify({"erro": f"Erro inesperado no servidor: {e}"}), 500

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy.exc import IntegrityError
 from config import db
 from models import Motoristas, Veiculos, AlocacaoViagens, Alunos, AlocacaoAlunos
 from utils import cadastro_ativo, perfis_permitidos, formatar_nome, verifica_email
@@ -256,12 +257,31 @@ def excluir_alocacaoviagem(id):
     relacoes = AlocacaoViagens.query.get(id)
     if not relacoes:
         return jsonify({"erro": "Alocação não encontrado"}), 404
+    try:
+        db.session.delete(relacoes)
+        db.session.commit()
+        return jsonify({"mensagem": "Veículo excluído com sucesso!"}), 200
+    except IntegrityError as e:
+        # Se houver um erro de integridade (restrição de chave estrangeira, NOT NULL, etc.)
+        db.session.rollback() # MUITO IMPORTANTE: Reverter a transação em caso de erro
 
-    
+        # Log do erro para depuração
+        print(f"Erro de Integridade ao excluir {relacoes}: {e}")
+        
+        # Verifica a origem do erro (opcional, mas bom para mensagens específicas)
+        # O erro 'NotNullViolation' indica que há registros dependentes.
+        # Log do erro para depuração (Mantenha o log para identificar qual tabela causou o erro)
+        print(f"Erro de Integridade ao excluir: {e}") 
+        
+        # Mensagem única e abrangente para todas as violações de integridade (Foreign Key, Not Null, etc.)
+        mensagem_erro = "Não foi possível excluir a vinculação do motorista com o veículo. Ele está vinculado a uma rota'Criação das rotas' e deve ser desassociado primeiro. Obs. É preciso remover os alunos vinculados a essa rota antes de excluir a alocação."
 
-    db.session.delete(relacoes)
-    db.session.commit()
-    return jsonify({"mensagem": "Alocação excluída com sucesso!"}), 200
+        return jsonify({"erro": mensagem_erro}), 409
+
+    except Exception as e:
+        # Tratar outros erros inesperados
+        db.session.rollback()
+        return jsonify({"erro": f"Erro inesperado no servidor: {e}"}), 500
 
 #Rota para editar a relação de alunos em uma alocação
 @rotas_bp.route('/relacao_editar_rotas', methods=['GET', 'PUT'])
