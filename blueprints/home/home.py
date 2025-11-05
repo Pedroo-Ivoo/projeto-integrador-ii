@@ -1,7 +1,7 @@
 
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
-
+from models import Motoristas, Pais
 from utils import cadastro_ativo, perfis_permitidos
 
 
@@ -23,6 +23,22 @@ def cadastros():
     perfil = current_user.perfilAcesso
     nome_usuario = current_user.nome
     return render_template("cadastros.html", nome_usuario=nome_usuario, perfil=perfil)
+
+@home_bp.route("/editar_cadastros")
+@login_required
+@cadastro_ativo
+def editar_cadastros(): 
+    perfil = current_user.perfilAcesso
+    nome_usuario = current_user.nome
+    if current_user.perfilAcesso == 'Motorista':
+        motorista = Motoristas.query.filter_by(id_usuario=current_user.id).first()
+        return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil, motorista=motorista)
+    elif current_user.perfilAcesso == 'Pais':
+        pai = Pais.query.filter_by(id_usuario=current_user.id).first()
+        return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil, pai=pai)
+    else:
+        return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil)
+        
 
 @home_bp.route("/rotas")
 @login_required

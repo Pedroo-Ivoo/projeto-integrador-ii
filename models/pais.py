@@ -12,6 +12,8 @@ class Pais(db.Model):
     numero = db.Column(db.String(10), nullable=False)
     complemento = db.Column(db.String(100), nullable=True)
     bairro = db.Column(db.String(100), nullable=False)
+    cidade = db.Column(db.String(100), nullable=False)
+    estado = db.Column(db.String(2), nullable=False)
     regiao = db.Column(db.String(50), nullable=False)
     latitude = db.Column(db.Float, nullable=True)  
     longitude = db.Column(db.Float, nullable=True)

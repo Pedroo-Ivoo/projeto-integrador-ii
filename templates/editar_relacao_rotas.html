@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criação de Rotas</title>
+    <title>Alterar a vinculação dos alunos</title>
     <!-- Link importando o bootstrap para o html -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header  data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
     <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
@@ -35,7 +35,7 @@
       {% endif %}
     </header>
     <main>
-        <h1 class="d-flex justify-content-center mb-4">Criação de Rotas</h1>
+        <h1 class="d-flex justify-content-center mb-4">Alterar a vinculação dos alunos</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
         <div id="msg-feedback" class="box_aviso container-md"></div>
         <div id="msg-error" class="box_aviso container-md"></div>
@@ -49,7 +49,7 @@
         
 
         <div class="container-md box-form" style="width: 80%;">
-            <form id="form" method="POST" action="/gerenciamento_rotas" >
+            <form id="form" method="PUT" action="/relacao_editar_rotas" >
                 <div class="row g-3">
                     <div class="col-md mb-3">
                     <label for="Motorista">Motorista e transporte</label>
@@ -87,25 +87,38 @@
                     <div class="row ">
 
                         <div class="col-md mb-3">
-                        <label for="Motorista">Alunos disponíveis</label>
-                        {% if alunos|length == 0 %}
+                        <label for="Motorista">Alunos já alocados em transporte</label>
+                        {% if todos_alunos|length == 0 %}
                             <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="checkalunos" disabled>
                             <label class="form-check-label" for="checkDefault">
                                 Sem alunos disponíveis
                             </label>
                                 {% endif %}
-                                {% for aluno in alunos %}
-                        <div class="form-check"> 
-                        <input class="form-check-input" type="checkbox" value="{{ aluno.id }}" name="alunos">
+                                {% for aluno in todos_alunos %}
+    {% set aluno_id = aluno.aluno.id %}
+    {% set alocacao_aluno_id = aluno.id %} <div class="form-check d-flex align-items-center mb-2">
+        
+        <input class="form-check-input" type="checkbox" name="alunos" value="{{ aluno_id }}" id="aluno-{{ aluno_id }}" >
+        
+        <label class="form-check-label ms-2 me-3" for="aluno-{{ aluno_id }}">
+            Aluno: {{ aluno.aluno.nome }} {{ aluno.aluno.sobrenome }} | Responsável: {{aluno.aluno.pais.nome}} | Bairro: {{aluno.aluno.pais.bairro}} | Motorista Atual {{aluno.transporte.motorista_obj.nome}}
+        </label>
+        
+        {% if perfil == 'Admin' %}
+        <button type="button" 
+                class="btn btn-sm btn-outline-danger" 
+                title="Desvincular Aluno da Rota"
+                onclick="abrirModalExclusao('{{ alocacao_aluno_id }}')">
+            <i class="bi bi-x-circle"></i> Desvincular
+        </button>
+        {% endif %}
+    </div>
+{% endfor %}
+                                
+                        </div>
+                        </div>
 
-                        <label class="form-check-label" for="checkDefault">
-                                {{ aluno.nome }} {{aluno.sobrenome}}. Responsável: {{aluno.pais.nome}} Rua: {{ aluno.pais.rua }} Nº: {{aluno.pais.numero}} Bairro: {{aluno.pais.bairro}} CEP: {{aluno.pais.cep}}
-                            </label>
-                        </div>
-                        {% endfor %}
-                        </div>
-                        </div>
                     </div>
                 
                     <div class="row g-3">
@@ -113,10 +126,30 @@
                             <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
                             <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
                             <a href="{{ url_for('home.rotas') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            
                         </div>
                     </div>
-            </form>
+                </form>
+                
         </div>
+        <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalConfirmacaoLabel">Confirmação de Exclusão</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Tem certeza que deseja desvincular este aluno da rota atual? O aluno voltará a ficar disponível para outras alocações.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Desvincular</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-3">
@@ -137,7 +170,8 @@
 
     
     
-    <script src="/static/funcoes_relacao_rota.js"></script>
+    <script src="/static/funcoes_editar_relacao_rota.js"></script>
+    <script src="/static/funcoes_excluir_alocacao_aluno.js"></script>
 </body>
 
 </html>

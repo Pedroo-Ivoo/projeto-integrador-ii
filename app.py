@@ -37,10 +37,10 @@ app.secret_key = CHAVE_SECRETA
 s = Serializer(CHAVE_SECRETA)
 
 #Banco de dados local para testes
-# POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
+POSTGRES_URI = os.getenv("DATABASE_URL_LOCAL")
 
 #Banco de dados hospedado no aiven
-POSTGRES_URI = os.getenv("DATABASE_URL")
+# POSTGRES_URI = os.getenv("DATABASE_URL")
 # Verificações básicas para garantir que as variáveis do DB foram carregadas
 if not POSTGRES_URI:
     raise ValueError("DATABASE_URL não definida! Verifique o arquivo .env ou variáveis de ambiente")

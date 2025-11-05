@@ -5,16 +5,16 @@
       <img src="/static/images/motorista.jpg" class="card-img-top" alt="motorista">
       
 
-  <!-- Conteúdo principal -->
+  <!-- Conteúdo principal Motorista-->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Cadastro de Motorista</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar motoristas, bem como a atualização e exclusão cadastros existentes.</p>
+      <h5 class="card-title mt-3">Editar cadastro de Motorista</h5>
+      <p class="card-text mb-3">Seção para editar o cadastro do motorista. Obs. A exclusão do cadastro só pode ser feita pelo administrador.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('motoristas.cadastro_motoristas') }}"  class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('motoristas.lista_motorista') }}" class="btn btn-warning btn-bloqueio"> <i class="bi bi-lock-fill" style="color: black"></i> Editar</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
@@ -23,10 +23,11 @@
       </button>
     </div>
   </div>
-  </div>
+</div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal -->
+ <!-- Modal Info -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -41,9 +42,9 @@
       </div>
     </div>
   </div>
-  </div>
+</div>
 
- <!-- Card do Veículo -->
+<!-- Card do Veículo -->
 
       <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
       <img src="/static/images/veiculos.jpeg" class="card-img-top" alt="veiculos">
@@ -52,13 +53,13 @@
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Cadastro de Veículos</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar os veículos com as respectivas vagas disponíveis, bem como a atualização e exclusão cadastros existentes.</p>
+      <h5 class="card-title mt-3">Editar cadastro de Veículos</h5>
+      <p class="card-text mb-3">Seção para editar o cadastro do veículo. Obs. A exclusão do cadastro só pode ser feita pelo administrador.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('veiculos.cadastro_veiculos') }}"  class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('veiculos.lista_veiculos') }}" class="btn btn-warning btn-bloqueio"> <i class="bi bi-lock-fill" style="color: black"></i> Editar</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
@@ -97,13 +98,13 @@
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Cadastro de Pais</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar Pais, bem como a atualização e exclusão cadastros existentes.</p>
+      <h5 class="card-title mt-3">Editar cadastro de pais</h5>
+      <p class="card-text mb-3">Seção para editar o cadastro dos pais. Obs. A exclusão do cadastro só pode ser feita pelo administrador.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('pais.cadastro_pais') }}" class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('pais.editar_pai', id=pai.id) }}"  class="btn btn-warning">Editar</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
@@ -112,10 +113,10 @@
       </button>
     </div>
   </div>
-  </div>
+</div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -130,7 +131,7 @@
       </div>
     </div>
   </div>
-  </div>
+</div>
 
              <!-- Card do Aluno -->
 
@@ -141,13 +142,13 @@
   <!-- Conteúdo principal -->
   <div class="flex-grow-1 d-flex flex-column justify-content-between">
     <div>
-      <h5 class="card-title mt-3">Cadastro de Aluno</h5>
-      <p class="card-text mb-3">Seção dedicada a cadastrar Aluno, bem como a atualização e exclusão cadastros existentes.</p>
+      <h5 class="card-title mt-3">Editar cadastro de aluno</h5>
+      <p class="card-text mb-3">Seção para editar o cadastro dos alunos. Obs. A exclusão do cadastro só pode ser feita pelo administrador.</p>
     </div>
 
     <!-- Botões -->
     <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('alunos.cadastro_alunos') }}" class="btn btn-primary">Ir para página</a>
+      <a href="{{ url_for('alunos.lista_alunos') }}"  class="btn btn-warning">Editar</a>
       <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="bi bi-question-circle"
            data-bs-toggle="tooltip"
@@ -156,10 +157,10 @@
       </button>
     </div>
   </div>
-  </div>
+</div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -174,50 +175,8 @@
       </div>
     </div>
   </div>
-  </div>
-
- <!-- Card Edição cadastros -->
-
-
-            <div class="card d-flex flex-column justify-content-between p-3" style="width: 18rem;">
-              <img src="/static/images/edicao.jpg" class="card-img-top" alt="Gerenciar rotas">
-  
-
-  <!-- Conteúdo principal -->
-  <div class="flex-grow-1 d-flex flex-column justify-content-between">
-    <div>
-      <h5 class="card-title mt-3">Edição dos cadastros</h5>
-      <p class="card-text mb-3">Seção dedicada para editar, alterar ou apagar cadastros.</p>
-    </div>
-
-    <!-- Botões -->
-    <div class="mt-auto d-flex justify-content-between align-items-center">
-      <a href="{{ url_for('home.editar_cadastros') }}" class="btn btn-primary">Ir para página</a>
-      <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <i class="bi bi-question-circle"
-           data-bs-toggle="tooltip"
-           data-bs-placement="top"
-           data-bs-title="Abrir informações"></i>
-      </button>
-    </div>
-  </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Nesta seção estarão contidos as opções de edição, alteração e deleção dos cadastros.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+
+ 
 
 </div>

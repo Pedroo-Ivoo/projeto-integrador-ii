@@ -17,9 +17,13 @@ def exibicao_rotas():
             perfil = current_user.perfilAcesso
             nome_usuario = current_user.nome
             # motoristas = Motoristas.query.all()
-            motoristas =db.session.query(Motoristas).join(AlocacaoViagens).join(AlocacaoAlunos).distinct(Motoristas.id).order_by(Motoristas.id,Motoristas.nome).all()
+            alocacoes_viagem = db.session.query(AlocacaoViagens)\
+                .join(AlocacaoAlunos)\
+                .distinct(AlocacaoViagens.id)\
+                .all()
             
-            return render_template('exibicao_rotas.html', motoristas=motoristas, perfil=perfil, nome_usuario=nome_usuario)
+            
+            return render_template('exibicao_rotas.html',alocacoes_viagem=alocacoes_viagem , perfil=perfil, nome_usuario=nome_usuario)
         
         if request.method == 'POST':
             rotas = AlocacaoAlunos.query.filter_by(id_alocacaoViagem=request.json.get('motorista')).all()

@@ -9,4 +9,4 @@ class Motoristas(db.Model):
     telefone = db.Column(db.String(20), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     #Estabelecendo relacionamento entre as tabelas
-    usuario_obj = db.relationship('Usuarios', backref='motoristas')
+    usuario = db.relationship('Usuarios', backref='motoristas')

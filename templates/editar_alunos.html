@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exibição de Rotas</title>
+    <title>Altearar Cadastro de Alunos</title>
     <!-- Link importando o bootstrap para o html -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -24,7 +24,7 @@
 
 <body>
     <header data-bs-theme="dark" class="navbar bg-primary d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
+    <a href="{{ url_for('home.home') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"> <span class="fs-4 ms-5">Transporte Seguro</span> 
     </a> 
       {% if perfil == 'Admin' %}
         {% include 'trechos/headers/hearder_admin.html' %}
@@ -35,55 +35,51 @@
       {% endif %}
     </header>
     <main>
-        <h1 class="d-flex justify-content-center mb-4">Exibição de Rotas</h1>
+        <h1 class="d-flex justify-content-center mb-4">Alterar Cadastro de Alunos</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
-        <div id="msg-feedback" class="box_aviso container-md"></div>
-        <div id="msg-error" class="box_aviso container-md"></div>
+        <div id="msg-feedback"></div>
+        <div id="msg-error"></div>
         <div class="centraliza">
          {% if perfil == 'Admin' %}
-            {% include 'trechos/cadastros/cad_veiculos/info_admin.html' %}
-         {% elif perfil == 'Motorista' %}
-            {% include 'trechos/cadastros/cad_motorista/info_motoristas.html' %}
+            {% include 'trechos/cadastros/cad_aluno/info_admin.html' %}
+         {% elif perfil == 'Pais' %}
+            {% include 'trechos/cadastros/cad_aluno/info_pais.html' %}
          {% endif %}
         </div>
+
         
 
         <div class="container-md box-form" style="width: 80%;">
-            <form id="form" method="POST" action="/exibicao_rotas" >
+            <form id="form" method="PUT" action="/editar_alunos" >
                 <div class="row g-3">
-                    <div class="col-md mb-3">
-                    <label for="Exibição">Selecione o Motorista para exibir a rota de transporte dos alunos</label>
-                    <select class="form-control" name="motorista" id="motorista" required>
-                        
-                            
-                      
-                            
-                            <option value="">Selecione</option>
-                            
-                            {% if alocacoes_viagem|length == 0 %}
-                                <option value="" disabled>Nenhum motorista cadastrado para rota</option>
-                            {% endif %}
-                            
-                            {% for alocacao in alocacoes_viagem %}
-                            <option value="{{ alocacao.id }}">
-                        {{ alocacao.motorista_obj.nome }} {{ alocacao.motorista_obj.sobrenome }} - {{ alocacao.veiculos_obj.tipo }}
-                    </option>
-                            {% endfor %}
-                            
-                        
-
-                        
-                    </select>
+                    <div class="col-sm-6">
+                        <label for="Nome">Nome (*)</label>  
+                        <input class="form-control" type="text" name="nome" id="nome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido deixar o campo vazio" value="{{ nome if nome is not none else '' }}">
+                    </div>
+               
+                    <div class="col-sm-6">
+                        <label for="Sobrenome">Sobrenome (*)</label>
+                        <input class="form-control" type="text" name="sobrenome" id="sobrenome" required pattern=".*[A-Za-z0-9].*" title="Não é permitido deixar o campo vazio" value="{{ sobrenome if sobrenome is not none else '' }}">
+                    </div>
                 </div>
-               
-                    
-               
                 
+                
+                <div class="row g-3 pt-3">
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="Responsavel"class= "mt3">Responsavel (*)</label>
+                        <select class="form-control" name="Responsavel" id="responsavel" required >
+                            <option value="{{ aluno.id_pais }}"selected>{{aluno.pais.nome}} {{aluno.pais.sobrenome}} </option>
+                            
+                            
+                        </select>
+                    </div>
+                </div>
                     <div class="row g-3">
                         <div class="col-auto">
                             <button type="submit" class="btn btn-outline-primary mb-3">Enviar</button>
                             <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
-                            <a href="{{ url_for('home.rotas') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            <a href="{{ url_for('home.home') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
                         </div>
                     </div>
             </form>
@@ -107,8 +103,10 @@
     <!-- <script src="/static/script.js"></script> -->
 
     
-    
-    <script src="/static/funcoes_exibe_rota.js"></script>
+    <script>
+    const alunoId = "{{ aluno.id }}";
+    </script>
+    <script src="/static/funcoes_editar_cadastro_aluno.js"></script>
 </body>
 
 </html>
