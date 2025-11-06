@@ -26,7 +26,7 @@
     <main class="  mb-3">
         <h1 class="d-flex justify-content-center mb-4">Cadastro</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
-        <div id="msg-error" class="container-md"></div>
+        <div class="box_aviso container-md" id="msg-error"></div>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                     {% for category, message in messages %}

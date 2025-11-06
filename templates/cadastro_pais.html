@@ -37,8 +37,8 @@
     <main>
         <h1 class="d-flex justify-content-center mb-4">Cadastro de Pais ou Responsáveis</h1>
         <!-- Metodo do flask para o usuário receber informações de alerta do backend -->
-        <div id="msg-feedback"></div>
-        <div id="msg-error"></div>
+        <div class="box_aviso container-md" id="msg-feedback"></div>
+        <div class="box_aviso container-md" id="msg-error"></div>
         <div class="centraliza">
          {% if perfil == 'Admin' %}
             {% include 'trechos/cadastros/cad_pais/info_admin.html' %}

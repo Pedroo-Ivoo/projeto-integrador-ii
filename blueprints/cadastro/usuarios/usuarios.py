@@ -1,8 +1,9 @@
-from smtplib import SMTPDataError
+from smtplib import SMTPAuthenticationError, SMTPDataError, SMTPException
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
 import bcrypt
+from sqlalchemy.exc import IntegrityError
 from models import Usuarios
 from config import db
 from utils import enviar_confirmacao, formatar_nome, verifica_email, gerador_serializer
@@ -64,6 +65,7 @@ def logout():
 @usuarios_bp.route("/cadastro_usuarios", methods=["GET", "POST"])
 
 def cadastro_usuario():
+
     if request.method == "POST":
         nome_recebido= request.form.get("nome","").strip() #as "" faz com que se o input vir sem dados o fluxo não quebre aos tentar aplicar o strip() é preciso validar o dado antes de enviar ao banco de dados
         sobrenome_recebido= request.form.get("sobrenome","").strip() #as "" faz com que se o input vir sem dados o fluxo não quebre aos tentar aplicar o strip() é preciso validar o dado antes de enviar ao banco de dados
@@ -121,12 +123,17 @@ def cadastro_usuario():
 
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------Segundo nivel de verificação--------------------------------------#
-        #Busca do Banco de dados se há usuario com o mesmo nome
+        #Busca do Banco de dados se há usuario com o mesmo nome ou mesmo e-mail
+        cadastro_existente_email = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
         cadastro_existente = Usuarios.query.filter_by(usuario=usuario).first() #realiza a consulta no banco.
         
         #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
         if cadastro_existente:
             flash(f"Nome de usuário já existe! Por favor, utilize outro nome de usuário.", "warning")
+            return redirect(url_for("usuarios.cadastro_usuario"))
+        # Verifica se o e-mail já existe
+        if cadastro_existente_email:
+            flash(f"E-mail já cadastrado! Por favor, utilize outro e-mail.", "warning")
             return redirect(url_for("usuarios.cadastro_usuario"))
         else:
         #Conversão da senha em hash pelo bcrypt
@@ -134,19 +141,52 @@ def cadastro_usuario():
             novo_usuario = Usuarios(nome=nome,sobrenome=sobrenome, email=email, usuario=usuario,senha=hashed, perfilAcesso=perfilAcesso, confirmado=False)
             
             db.session.add(novo_usuario)
-            db.session.commit()
-            #Variaveis para o envio da confirmação
-            salt='email-confirm'
-            pagina = 'confirma_cadastro.html'
-            nome_funcao = 'usuarios.confirm_email'
-            assunto = "Confirmação de cadastro"
+            try:
+                db.session.commit()
+                
+                # A. Lógica de SUCESSO
+                #Variaveis para o envio da confirmação
+                salt='email-confirm'
+                pagina = 'confirma_cadastro.html'
+                nome_funcao = 'usuarios.confirm_email'
+                assunto = "Confirmação de cadastro"
 
-            enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
+                enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
 
-            flash("Cadastro realizado! Verifique seu e-mail para confirmar o acesso.", "info")
-            return redirect(url_for("usuarios.cadastro_finalizar", email=novo_usuario.email))  # Evita resubmissão do formulário
-        
+                flash("Cadastro realizado! Verifique seu e-mail para confirmar o acesso.", "info")
+                return redirect(url_for("usuarios.cadastro_finalizar", email=novo_usuario.email, status="ok")) # Evita resubmissão do formulário
+                
+            except IntegrityError:
+                # B. Lógica de FALHA (Condição de Corrida)
+                db.session.rollback()
+                flash("Erro de unicidade no cadastro. E-mail ou nome de usuário já utilizados.", "danger")
+                return redirect(url_for("usuarios.cadastro_usuario"))
+            
+
+            except SMTPAuthenticationError:
+                # Falha de Credenciais de E-mail (Se a senha de app estiver errada)
+                flash("Cadastro realizado, mas ocorreu um erro de autenticação ao enviar o e-mail. Por favor, contate o suporte.", "danger")
+                
+                # Redireciona para a página pós-cadastro, avisando sobre a falha.
+                return redirect(url_for("usuarios.cadastro_finalizar", email=novo_usuario.email, status="email_fail")) # Novo status
+                
+            except SMTPException:
+                # ERRO GERAL: Outra falha SMTP (Ex: servidor offline, erro de rede)
+                # O usuário está CADASTRADO.
+                flash("Cadastro realizado, mas o envio do e-mail de confirmação FALHOU por problema de rede/servidor. Por favor, tente reenviar o e-mail.", "danger")
+            
+                # Redireciona para a página pós-cadastro, avisando sobre a falha.
+                return redirect(url_for("usuarios.cadastro_finalizar", email=novo_usuario.email,status="email_fail")) # Novo status
+
+            except Exception as e:
+                # TRATAMENTO DE ERRO GENÉRICO: Para qualquer erro INESPERADO (opcional, mas recomendado)
+                db.session.rollback() # Pode ser necessário, dependendo de onde o erro ocorreu
+                flash(f"Ocorreu um erro inesperado no sistema: {e}", "danger")
+                return redirect(url_for("usuarios.cadastro_usuario"))
+                                
+
     return render_template("cadastro_usuarios.html")
+
 
 #Rota de confirmação para o cadastro
 #Essa rota é chamada no pelo link do e-mail e quando utlizada confirma o cadastro do usuário
@@ -183,34 +223,46 @@ def confirm_email(token):
     except SMTPDataError:
         flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
         return redirect(url_for('usuarios.login'))
+    except SMTPAuthenticationError:
+        flash("Erro de autenticação ao enviar o e-mail. Por favor, contate o suporte.", "danger")
+        return redirect(url_for('usuarios.login'))
     
 #Rota de para a página de confirmação do cadastros
 @usuarios_bp.route('/cadastro_finalizar', methods=["POST", "GET"])
 def cadastro_finalizar():
     email = request.args.get("email")
-    return render_template("cadastro_finalizar.html", email=email)
+    status = request.args.get('status', 'ok') # Pega o status, assume 'ok' se não vier nada
+    return render_template("cadastro_finalizar.html", email=email,status=status)
 
 #Rota para reenvio do e-mail no caso do usuário não receber o e-mail que é enviado ao final do cadastro.
 @usuarios_bp.route('/reenviar_confirmacao/<email>', methods=['GET'])
 def reenviar_confirmacao(email):
-    usuario = Usuarios.query.filter_by(email=email).first()
+    try:
+        usuario = Usuarios.query.filter_by(email=email).first()
+        status = request.args.get('status', 'ok') # Pega o status, assume 'ok' se não vier nada
 
-    if not usuario:
-        flash("Usuário não encontrado.", "danger")
-        return redirect(url_for("usuarios.cadastro_finalizar", email=email))
+        if not usuario:
+            flash("Usuário não encontrado.", "danger")
+            return redirect(url_for("usuarios.cadastro_finalizar", email=email))
 
-    if usuario.confirmado:
-        flash("Este e-mail já foi confirmado.", "info")
-        return redirect(url_for("usuarios.login"))
-    #variavel do envio
-    salt='email-confirm'
-    pagina = 'confirma_cadastro.html'
-    nome_funcao = 'usuarios.confirm_email'
-    assunto = "Confirmação de cadastro"
-    
-    enviar_confirmacao(email,salt,pagina,nome_funcao, assunto)
-    flash("E-mail de confirmação reenviado com sucesso!", "success")
-    return redirect(url_for("usuarios.cadastro_finalizar", email=email))
+        if usuario.confirmado:
+            flash("Este e-mail já foi confirmado.", "info")
+            return redirect(url_for("usuarios.login"))
+        #variavel do envio
+        salt='email-confirm'
+        pagina = 'confirma_cadastro.html'
+        nome_funcao = 'usuarios.confirm_email'
+        assunto = "Confirmação de cadastro"
+        
+        enviar_confirmacao(email,salt,pagina,nome_funcao, assunto)
+        flash("E-mail de confirmação reenviado com sucesso!", "success")
+        return redirect(url_for("usuarios.cadastro_finalizar", email=email,status=status))
+    except SMTPDataError:
+        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
+        return redirect(url_for("usuarios.cadastro_finalizar", email=email, status="email_fail"))
+    except SMTPAuthenticationError:
+        flash("Erro de autenticação ao enviar o e-mail. Por favor, contate o suporte.", "danger")
+        return redirect(url_for("usuarios.cadastro_finalizar", email=email, status="email_fail"))
 
 
 #---------------------------------------------------------------------------------------------------#
@@ -220,31 +272,37 @@ def reenviar_confirmacao(email):
 #Rota para a recuperação da senha
 @usuarios_bp.route("/recuperar_senha", methods=["POST", "GET"])
 def recuperar():
-    if request.method == "POST":
-        email = request.form.get("email", "").lower().strip()
-        print(email)
-         #Busca do Banco de dados se há usuario com o mesmo nome
-        cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
-        
-        if not cadastro_existente:
-            flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
-            print('email invalido')
-            return redirect(url_for("usuarios.recuperar"))
-        else:
-            salt = 'reset-password'
-            pagina = 'email_senha.html'
-            nome_funcao = 'usuarios.nova_senha'
-            assunto = "Redefinir nova senha"
-
-            enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
+    try:
+        if request.method == "POST":
+            email = request.form.get("email", "").lower().strip()
+            print(email)
+            #Busca do Banco de dados se há usuario com o mesmo nome
+            cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
             
-            flash(f"E-mail enviado com sucesso.", "warning")
-            print("email valido")
-            return redirect(url_for("usuarios.recuperar"))
-    
-    
-    return render_template("recuperar_senha.html")
+            if not cadastro_existente:
+                flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
+                print('email invalido')
+                return redirect(url_for("usuarios.recuperar"))
+            else:
+                salt = 'reset-password'
+                pagina = 'email_senha.html'
+                nome_funcao = 'usuarios.nova_senha'
+                assunto = "Redefinir nova senha"
 
+                enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
+                
+                flash(f"E-mail enviado com sucesso.", "warning")
+                print("email valido")
+                return redirect(url_for("usuarios.recuperar"))
+        
+        
+        return render_template("recuperar_senha.html")
+    except SMTPDataError:
+        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
+        return redirect(url_for("usuarios.recuperar"))
+    except SMTPAuthenticationError:
+        flash("Erro de autenticação ao enviar o e-mail. Por favor, contate o suporte.", "danger")
+        return redirect(url_for("usuarios.recuperar"))
 
 
 #Rota de redefinição de nova senha
@@ -294,10 +352,7 @@ def nova_senha(token):
     except BadSignature:
         flash("Token inválido.", "danger")
         return redirect(url_for('usuarios.login'))
-    except SMTPDataError:
-        flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
-        return redirect(url_for('usuarios.login'))
-    
+   
 #Rota para validação de usuários que não confirmaram o e-mail
 @usuarios_bp.route('/validar', methods=["GET", "POST"])
 @login_required
@@ -326,4 +381,8 @@ def validar():
                 return redirect(url_for("usuarios.validar"))
     except SMTPDataError:
         flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")
-    return render_template("validar_cadastro.html")
+        return render_template("validar_cadastro.html")
+
+    except SMTPAuthenticationError:
+        flash("Erro de autenticação ao enviar o e-mail. Por favor, contate o suporte.", "danger")
+        return redirect(url_for("usuarios.validar"))
