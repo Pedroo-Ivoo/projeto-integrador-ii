@@ -101,12 +101,25 @@ def cadastro_pais():
             #Verifica se a região está preenchida
             if not regiao:
                 erros.append("O campo 'Região' é obrigatório.") 
+            #Verifica se o e-mail já está cadastrado
+            email_existente = Pais.query.filter_by(email=email).first()
+            if email_existente:
+                erros.append(f"O e-mail '{email}' já está cadastrado para outro responsável. Informe um e-mail único.")
                
             
             #Verifica se todos os campos foram preenchidos. Se não forem não realiza o cadastro e retorna uma informação ao usuário.
             #Na existencia de erro irá redirecionar para a página cadastro com as informações.            
             if erros:
                 return jsonify({"erros": erros}), 400
+
+            #-------------------------------------Segundo nivel de verificação--------------------------------------#
+            #Busca do Banco de dados se há usuario com o mesmo nome
+            cadastro_existente = Pais.query.filter_by(nome=nome, sobrenome=sobrenome).first() #realiza a consulta no banco.
+            
+            #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
+            if cadastro_existente:
+                return jsonify({"erros": ["Pai ou Responsável já cadastrado."]}), 409
+            
 
             #-------------------------------------------------------------------------------------------------------#
             
@@ -126,28 +139,23 @@ def cadastro_pais():
 
             ## -------------------------- FIM: GEOCODIFICAÇÃO ----------------------------- ##
             
-            #-------------------------------------Segundo nivel de verificação--------------------------------------#
-            #Busca do Banco de dados se há usuario com o mesmo nome
-            cadastro_existente = Pais.query.filter_by(nome=nome, sobrenome=sobrenome).first() #realiza a consulta no banco.
             
-            #Verifica se o nome cadastrado já se encontra no banco de dados, se já constar retornará um aviso ao usuário
-            if cadastro_existente:
-                return jsonify({"erros": ["Pai ou Responsável já cadastrado."]}), 409
+            
             #Caso não haja cadastro existente, realiza o cadastro
-            else:
-                regiao_obj = Regioes.query.filter_by(regiao=regiao).first()
-                usuario_obj = Usuarios.query.get(current_user.id)
-                novo_pai = Pais(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, cep=cep, rua=rua, numero=numero, complemento=complemento,bairro=bairro,cidade=cidade, estado=estado ,latitude=latitude,longitude=longitude, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
-                
-                db.session.add(novo_pai)
-                db.session.commit()
-                print("comitei aqui")
-                #Variaveis para o envio da confirmação
-                
-
-                
-                return jsonify({"mensagem": "Cadastro realizado!"}), 201
             
+            regiao_obj = Regioes.query.filter_by(regiao=regiao).first()
+            usuario_obj = Usuarios.query.get(current_user.id)
+            novo_pai = Pais(nome=nome,sobrenome=sobrenome, email=email, telefone=telefone, cep=cep, rua=rua, numero=numero, complemento=complemento,bairro=bairro,cidade=cidade, estado=estado ,latitude=latitude,longitude=longitude, regiao=regiao, regiao_obj= regiao_obj, usuario_obj =usuario_obj)
+            
+            db.session.add(novo_pai)
+            db.session.commit()
+            print("comitei aqui")
+            #Variaveis para o envio da confirmação
+            
+
+            
+            return jsonify({"mensagem": "Cadastro realizado!"}), 201
+        
     except Exception as e:
            return jsonify({"erro": str(e)}), 500
         
