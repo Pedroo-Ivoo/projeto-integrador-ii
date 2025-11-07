@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template
+from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 from models import Motoristas, Pais
 from utils import cadastro_ativo, perfis_permitidos
@@ -32,9 +32,20 @@ def editar_cadastros():
     nome_usuario = current_user.nome
     if current_user.perfilAcesso == 'Motorista':
         motorista = Motoristas.query.filter_by(id_usuario=current_user.id).first()
+        if motorista is None:
+            # Envia uma mensagem informativa
+            flash("Seu cadastro de Motorista ainda não foi preenchido. Por favor, complete o cadastro para as páginas de edição.", "warning")
+            # Redireciona para a rota de cadastro (Ajuste a URL se o nome da rota for diferente)
+            return redirect(url_for('motoristas.cadastro_motoristas'))
         return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil, motorista=motorista)
     elif current_user.perfilAcesso == 'Pais':
         pai = Pais.query.filter_by(id_usuario=current_user.id).first()
+        # Se o cadastro de Pai não existe, redireciona para o cadastro. 
+        if pai is None:
+            # Envia uma mensagem informativa
+            flash("Seu cadastro de Pai/Responsável ainda não foi preenchido. Por favor, complete o cadastro para poder editá-lo.", "warning")
+            # Redireciona para a rota de cadastro (Ajuste a URL se o nome da rota for diferente)
+            return redirect(url_for('pais.cadastro_pais'))
         return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil, pai=pai)
     else:
         return render_template("cadastros_editar.html", nome_usuario=nome_usuario, perfil=perfil)

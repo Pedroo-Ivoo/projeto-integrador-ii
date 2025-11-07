@@ -82,7 +82,11 @@
                         <div class="col-auto">
                             <button type="submit" class="btn btn-outline-primary mb-3">Salvar</button>
                             <button type="reset" class="btn btn-outline-warning mb-3">Apagar</button>
+                            {% if perfil == 'Admin' %}
                             <a href="{{ url_for('motoristas.lista_motorista') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            {% else %}
+                            <a href="{{ url_for('home.editar_cadastros') }}" class="btn btn-outline-secondary mb-3">Voltar</a>
+                            {% endif %}
                         </div>
                     </div>
             </form>
