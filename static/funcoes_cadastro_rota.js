@@ -9,7 +9,6 @@ $(document).ready(function() {
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
             
                 // Verifica se o tipo foi selecionado
@@ -36,7 +35,6 @@ $(document).ready(function() {
                     motorista: motorista,
                     transporte: transporte,
                 };
-                console.log(data)
                 
                 // Envia os dados para o servidor usando fetch API
                 fetch('/gerenciamento_rotas', {

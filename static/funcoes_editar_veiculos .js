@@ -68,7 +68,6 @@ $(document).ready(function() {
 
     // --- Função de Submit e Validação ---
     $('#form').on('submit', function(event){
-        console.log("Função de submit acionada!");
         event.preventDefault();
         
         // Verifica se a placa foi digitada
@@ -112,7 +111,6 @@ $(document).ready(function() {
             tipo: tipo,
             vagas: vagas,
         };
-        console.log(data)
         
         // Envia os dados para o servidor usando fetch API
         fetch(`/${veiculoId}/editar_veiculo`, {

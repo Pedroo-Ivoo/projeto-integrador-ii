@@ -73,7 +73,6 @@ def cadastro_alunos():
                 
                 db.session.add(novo_aluno)
                 db.session.commit()
-                print("comitei aqui")          
                 
                 return jsonify({"mensagem": "Cadastro realizado!"}), 201
             
@@ -101,7 +100,6 @@ def lista_alunos():
                 return render_template("lista_alunos_editar.html", perfil=perfil, nome_usuario=nome_usuario, alunos=alunos)
             else:
                 alunos = Alunos.query.all()
-                print(alunos)
                 return render_template("lista_alunos_editar.html", perfil=perfil, nome_usuario=nome_usuario, alunos=alunos)
     except Exception as e:
         print(e)
@@ -167,7 +165,6 @@ def editar_aluno(id):
             aluno.id_pais = id_responsavel
             
             db.session.commit()
-            print("comitei aqui")
          
 
             

@@ -66,7 +66,6 @@ def gerenciamento_rotas():
                 novo_alocacao = AlocacaoViagens(id_motorista=motorista, id_veiculo=veiculo)
                 db.session.add(novo_alocacao)
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 return jsonify({"mensagem": "Cadastro realizado!"}), 201
 
@@ -118,7 +117,6 @@ def relacao_rotas():
             alunos_selecionados = data.get('alunos', [])
             vagas_disponiveis = calcular_vagas_disponiveis(motorista)
             
-            print(data)           
             ##---------------------------------------Validações---------------------------------------##
             #Nos campos obrigatórios se precisamos informar ao usuário qual campo foi preenchido de forma incorreta.
             #Assim as validações deve ser individualizadas e ao final, caso existam erros, retornar os erros ao usuário.
@@ -148,7 +146,6 @@ def relacao_rotas():
                     novo_alocacao = AlocacaoAlunos(id_alocacaoViagem=motorista, id_aluno=aluno_id)
                     db.session.add(novo_alocacao)
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 return jsonify({"mensagem": "Cadastro realizado!"}), 201
  
@@ -236,7 +233,6 @@ def editar_alocacaoviagem(id):
                 relacoes.id_motorista = motorista
                 relacoes.id_veiculo = veiculo
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 return jsonify({"mensagem": "Cadastro Atualizado!"}), 201
 

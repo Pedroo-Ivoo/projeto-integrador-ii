@@ -8,7 +8,6 @@ $(document).ready(function() {
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
                 
                 // Verifica se a nome foi digitada

@@ -149,7 +149,6 @@ def cadastro_pais():
             
             db.session.add(novo_pai)
             db.session.commit()
-            print("comitei aqui")
             #Variaveis para o envio da confirmação
             
 
@@ -320,7 +319,6 @@ def editar_pai(id):
             pai.longitude = longitude
             
             db.session.commit()
-            print("comitei aqui")
             #Variaveis para o envio da confirmação
             
 

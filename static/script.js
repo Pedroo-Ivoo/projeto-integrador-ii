@@ -13,7 +13,6 @@ function mostrarSenha(){
 }
 if (typeof $ !== 'undefined'){
  $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
                 
                 // Verifica se a senha foi digitada

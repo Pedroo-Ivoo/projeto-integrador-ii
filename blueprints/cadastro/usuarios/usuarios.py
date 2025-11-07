@@ -30,7 +30,6 @@ def login():
     if request.method== "POST":
         usuario = request.form.get("usuario", "").lower().strip()
         senha = request.form.get("senha","").lower().strip()
-        print(f"Usuario {usuario} e senha {senha}")
         usuario_cadastrado = Usuarios.query.filter_by(usuario=usuario).first()
         if usuario_cadastrado:
             #Verificador se a senha com hash corresponde com a senha do salva
@@ -275,13 +274,11 @@ def recuperar():
     try:
         if request.method == "POST":
             email = request.form.get("email", "").lower().strip()
-            print(email)
             #Busca do Banco de dados se há usuario com o mesmo nome
             cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
             
             if not cadastro_existente:
                 flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
-                print('email invalido')
                 return redirect(url_for("usuarios.recuperar"))
             else:
                 salt = 'reset-password'
@@ -292,7 +289,6 @@ def recuperar():
                 enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
                 
                 flash(f"E-mail enviado com sucesso.", "warning")
-                print("email valido")
                 return redirect(url_for("usuarios.recuperar"))
         
         
@@ -360,13 +356,11 @@ def validar():
     try:
         if request.method == "POST":
             email = request.form.get("email", "").lower().strip()
-            print(email)
             #Busca do Banco de dados se há usuario com o mesmo nome
             cadastro_existente = Usuarios.query.filter_by(email=email).first() #realiza a consulta no banco.
             
             if not cadastro_existente:
                 flash(f"E-mail informado não está cadastrado.Informe um e-mail cadastrado.", "warning")
-                print('email invalido')
                 return redirect(url_for("usuarios.validar"))
             else:
                 salt='email-confirm'
@@ -377,7 +371,6 @@ def validar():
                 enviar_confirmacao(email, salt, pagina, nome_funcao, assunto)
                 
                 flash(f"E-mail enviado com sucesso.", "warning")
-                print("email valido")
                 return redirect(url_for("usuarios.validar"))
     except SMTPDataError:
         flash("Erro ao enviar o e-mail. Por favor, tente novamente mais tarde.", "danger")

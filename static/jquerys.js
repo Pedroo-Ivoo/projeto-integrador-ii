@@ -24,7 +24,6 @@ $(document).ready(function() {
     
             // Função é chamada quando houver o evento do submit
             $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
                 
                 // Verifica se a senha foi digitada

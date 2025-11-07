@@ -12,7 +12,6 @@ $(document).ready(function() {
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
                 
                 // Verifica se a nome foi digitada
@@ -49,7 +48,6 @@ $(document).ready(function() {
                     email: email,
                     telefone: telefone,
                 };
-                console.log("Dados preparados para envio:", data);
                 // Envia os dados para o servidor usando fetch API
                 fetch(`/${motoristaId}/editar_motorista`, {
                 method: 'PUT',
@@ -77,13 +75,11 @@ $(document).ready(function() {
                         }, 10000);
                     } else if (result.erro) {
                         container.innerHTML = `<div class="alert alert-danger">Erro inesperado: ${result.erro}</div>`;
-                        console.log("Erro inesperado exibido ao usuário:", result.erro);
                     }
                 })
                 .catch(error => {
                     document.getElementById('msg-feedback').innerHTML =
                         `<div class="alert alert-danger">Erro de conexão: ${error}</div>`;
-                        console.log("Erro de conexão exibido ao usuário:", error);
                 });
 
             

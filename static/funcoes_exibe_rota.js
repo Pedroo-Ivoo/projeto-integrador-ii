@@ -9,7 +9,6 @@ $(document).ready(function() {
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
             
                 // Verifica se o tipo foi selecionado
@@ -30,7 +29,6 @@ $(document).ready(function() {
                 const data = {
                     motorista: motorista,
                 };
-                console.log(data)
                 
                 // Envia os dados para o servidor usando fetch API
                 fetch('/exibicao_rotas', {

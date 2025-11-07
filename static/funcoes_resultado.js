@@ -116,7 +116,7 @@ if (Object.keys(dadosDaRota).length === 0 || !dadosDaRota.polyline_para_desenhar
         var script = document.createElement('script');
         script.id = 'google-maps-script';
         
-        // CORREÇÃO: Adicionando 'libraries=geometry' ao script.src
+        // Adicionando 'libraries=geometry' ao script.src
         script.src = 'https://maps.googleapis.com/maps/api/js?key=' + API_KEY + '&libraries=geometry&callback=initMap&loading=async';        
         script.defer = true;
         document.head.appendChild(script);

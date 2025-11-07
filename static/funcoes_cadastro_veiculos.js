@@ -38,7 +38,6 @@ mascaraPlaca();
 
     //Função para validar os campos do formulário
     $('#form').on('submit', function(event){
-                console.log("Função de submit acionada!");
                 event.preventDefault();
                 
                 // Verifica se a placa foi digitada
@@ -85,7 +84,6 @@ mascaraPlaca();
                     tipo: tipo,
                     vagas: vagas,
                 };
-                console.log(data)
                 // Envia os dados para o servidor usando fetch API
                 fetch('/cadastro_veiculos', {
                 method: 'POST',

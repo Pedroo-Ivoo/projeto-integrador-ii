@@ -82,7 +82,6 @@ def cadastro_motoristas():
                 
                 db.session.add(novo_motorista)
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 
 
@@ -191,7 +190,6 @@ def editar_motorista(id):
                 motorista.telefone = telefone
                 
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 
 

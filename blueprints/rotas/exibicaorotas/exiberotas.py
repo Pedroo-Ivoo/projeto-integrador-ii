@@ -29,8 +29,7 @@ def exibicao_rotas():
             rotas = AlocacaoAlunos.query.filter_by(id_alocacaoViagem=request.json.get('motorista')).all()
             data = request.get_json()
             motorista = data.get('motorista', "").strip()
-            print(data)
-            print(rotas)
+           
             
             url_destino = url_for('exiberotas.resultado', motorista=motorista)
             # url_destino = url_for('exiberotas.resultado')
@@ -61,8 +60,7 @@ def resultado(motorista):
             for endereco in rotas:
                 endereco_aluno = f'{endereco.aluno.pais.latitude},{endereco.aluno.pais.longitude}'
                 ENDERECOS_ALUNOS.append(endereco_aluno)
-            print(rotas)
-            print(ENDERECOS_ALUNOS)
+            
             
             # A lista de waypoints (paradas)
             waypoints = ENDERECOS_ALUNOS 

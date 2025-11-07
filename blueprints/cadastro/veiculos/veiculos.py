@@ -80,7 +80,6 @@ def cadastro_veiculos():
                 
                 db.session.add(novo_veiculo)
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 
 
@@ -182,7 +181,6 @@ def editar_veiculo(id):
                 veiculo.vagas = vagas
                 
                 db.session.commit()
-                print("comitei aqui")
                 #Variaveis para o envio da confirmação
                 
 
