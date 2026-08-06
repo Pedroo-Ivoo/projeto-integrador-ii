@@ -89,7 +89,10 @@ def cadastro_motoristas():
                 return jsonify({"mensagem": "Cadastro realizado!"}), 201
             
     except Exception as e:
-           return jsonify({"erro": str(e)}), 500
+        db.session.rollback()  # desfaz transação
+        # Aqui você pode logar o erro para análise
+        return {"error": "Erro interno ao cadastrar produto."}, 500
+
         
     #Edição do cadastro dos motoristas
 @motoritas_bp.route('/lista_motorista', methods=["GET", "POST"])
